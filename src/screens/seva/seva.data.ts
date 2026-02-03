@@ -1,0 +1,40 @@
+import { Seva } from 'src/models/seva.model';
+
+export const SEVA_DATA: (Seva & { location: 'Sode' | 'Udupi' })[] = [
+  {
+    id: 'sode_1',
+    title: { en: 'Alankara Seva', kn: 'ಅಲಂಕಾರ ಸೇವೆ' },
+    description: { en: 'Floral decoration for the deity.', kn: 'ದೇವರಿಗೆ ಹೂವಿನ ಅಲಂಕಾರ.' },
+    amount: 500,
+    currency: 'INR',
+    isActive: true,
+    requiresGotra: true,
+    requiresNakshatra: true,
+    availableDays: [0, 1, 2, 3, 4, 5, 6],
+    location: 'Sode',
+  },
+  {
+    id: 'sode_2',
+    title: { en: 'Annadana Seva', kn: 'ಅನ್ನದಾನ ಸೇವೆ' },
+    description: { en: 'Contribution towards mass feeding.', kn: 'ಅನ್ನದಾನಕ್ಕಾಗಿ ದೇಣಿಗೆ.' },
+    amount: 1000,
+    currency: 'INR',
+    isActive: true,
+    requiresGotra: true,
+    requiresNakshatra: false,
+    availableDays: [0, 1, 2, 3, 4, 5, 6],
+    location: 'Sode',
+  },
+  {
+    id: 'udupi_1',
+    title: { en: 'Paryaya Vishesha Pooja', kn: 'ಪರ್ಯಾಯ ವಿಶೇಷ ಪೂಜೆ' },
+    description: { en: 'Special pooja during Paryaya.', kn: 'ಪರ್ಯಾಯದ ಸಮಯದಲ್ಲಿ ವಿಶೇಷ ಪೂಜೆ.' },
+    amount: 2000,
+    currency: 'INR',
+    isActive: true,
+    requiresGotra: true,
+    requiresNakshatra: true,
+    availableDays: [0, 1, 2, 3, 4, 5, 6],
+    location: 'Udupi',
+  },
+];
