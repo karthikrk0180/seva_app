@@ -72,7 +72,7 @@ const styles = StyleSheet.create({
   },
   tabs: { flexDirection: 'row', backgroundColor: COLORS.background, borderRadius: 8, padding: 2 },
   tab: { paddingVertical: 4, paddingHorizontal: 12, borderRadius: 6 },
-  activeTab: { backgroundColor: COLORS.white || '#FFF', elevation: 2 },
+  activeTab: { backgroundColor: COLORS.surface, elevation: 2 },
   tabText: { fontWeight: '600' },
   activeTabText: { color: COLORS.primary },
   list: { padding: SPACING.m },

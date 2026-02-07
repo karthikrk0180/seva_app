@@ -48,8 +48,12 @@ export const LoginScreen = () => {
     <SafeAreaView style={styles.container}>
       <View style={styles.content}>
         <View style={styles.header}>
-          <Text style={TYPOGRAPHY.h1}>Welcome Devotee</Text>
-          <Text style={TYPOGRAPHY.body}>Sode Sri Vadiraja Matha</Text>
+          <Text style={[TYPOGRAPHY.h1, styles.welcomeTitle]} maxFontSizeMultiplier={1.3}>
+            Welcome Devotee
+          </Text>
+          <Text style={[TYPOGRAPHY.body, styles.subtitle]} maxFontSizeMultiplier={1.3}>
+            Sode Sri Vadiraja Matha
+          </Text>
         </View>
 
         <View style={styles.form}>
@@ -57,34 +61,49 @@ export const LoginScreen = () => {
             control={control}
             name="phoneNumber"
             render={({ field: { onChange, value } }) => (
-              <Input
-                label="Mobile Number"
-                placeholder="Enter 10 digit number"
-                keyboardType="phone-pad"
-                maxLength={10}
-                value={value}
-                onChangeText={onChange}
-                error={errors.phoneNumber?.message}
-                // Country code prefix visual
-                style={{ paddingLeft: 16 }} 
-              />
+              <View style={styles.phoneBlock}>
+                <Text style={styles.phoneLabel}>Mobile Number</Text>
+                <View style={styles.phoneRow}>
+                  <View style={styles.countryCode} accessibilityLabel="Country code India">
+                    <Text style={styles.countryCodeText}>+91</Text>
+                  </View>
+                  <View style={styles.phoneInputWrap}>
+                    <Input
+                      label=""
+                      placeholder="10-digit number"
+                      keyboardType="phone-pad"
+                      maxLength={10}
+                      value={value}
+                      onChangeText={onChange}
+                      error={errors.phoneNumber?.message}
+                      style={styles.phoneInput}
+                    />
+                  </View>
+                </View>
+                {errors.phoneNumber?.message ? (
+                  <Text style={styles.phoneError}>{errors.phoneNumber.message}</Text>
+                ) : null}
+              </View>
             )}
           />
 
           <View style={styles.termsContainer}>
-             <Text style={TYPOGRAPHY.caption}>
-               By continuing, you agree to our{' '}
-             </Text>
-             <TouchableOpacity onPress={() => setShowTerms(true)}>
-               <Text style={[TYPOGRAPHY.caption, { color: COLORS.primary, fontWeight: 'bold' }]}>
-                 Terms & Privacy Policy
-               </Text>
-             </TouchableOpacity>
+            <Text style={TYPOGRAPHY.caption} maxFontSizeMultiplier={1.3}>
+              By continuing, you agree to our{' '}
+            </Text>
+            <TouchableOpacity
+              onPress={() => setShowTerms(true)}
+              style={styles.termsTouchable}
+              accessibilityRole="button"
+              accessibilityLabel="Terms and Privacy Policy"
+            >
+              <Text style={[TYPOGRAPHY.caption, styles.termsLink]}>Terms & Privacy Policy</Text>
+            </TouchableOpacity>
           </View>
 
-          <Button 
-            title="Get OTP" 
-            onPress={handleSubmit(onSubmit)} 
+          <Button
+            title="Get OTP"
+            onPress={handleSubmit(onSubmit)}
             disabled={!isValid}
           />
         </View>
@@ -114,13 +133,37 @@ const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: COLORS.background },
   content: { flex: 1, padding: SPACING.l, justifyContent: 'center' },
   header: { marginBottom: SPACING.xl, alignItems: 'center' },
+  welcomeTitle: { textAlign: 'center', marginBottom: SPACING.xs },
+  subtitle: { color: COLORS.text.secondary, textAlign: 'center' },
   form: { width: '100%' },
-  termsContainer: { 
-    flexDirection: 'row', 
-    flexWrap: 'wrap', 
-    justifyContent: 'center', 
-    marginBottom: SPACING.l 
+  phoneBlock: { marginBottom: SPACING.m },
+  phoneLabel: { ...TYPOGRAPHY.caption, fontWeight: '600', marginBottom: SPACING.xs, color: COLORS.text.primary },
+  phoneRow: { flexDirection: 'row', alignItems: 'stretch' },
+  phoneInputWrap: { flex: 1 },
+  countryCode: {
+    minHeight: 48,
+    paddingHorizontal: SPACING.m,
+    justifyContent: 'center',
+    backgroundColor: COLORS.surface,
+    borderWidth: 1,
+    borderRightWidth: 0,
+    borderColor: COLORS.border,
+    borderTopLeftRadius: 8,
+    borderBottomLeftRadius: 8,
   },
+  countryCodeText: { ...TYPOGRAPHY.body, color: COLORS.text.secondary },
+  phoneInput: { flex: 1, marginBottom: 0, borderTopLeftRadius: 0, borderBottomLeftRadius: 0 },
+  phoneError: { ...TYPOGRAPHY.caption, color: COLORS.text.error, marginTop: SPACING.xs },
+  termsContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: SPACING.l,
+    minHeight: 48,
+  },
+  termsTouchable: { padding: SPACING.s },
+  termsLink: { color: COLORS.primary, fontWeight: '600' },
   modalContainer: { flex: 1, padding: SPACING.l, paddingTop: SPACING.xl },
   modalContent: { flex: 1, marginBottom: SPACING.m },
 });

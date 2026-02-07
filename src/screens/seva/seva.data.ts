@@ -15,9 +15,9 @@ export const SEVA_DATA: (Seva & { location: 'Sode' | 'Udupi' })[] = [
   },
   {
     id: 'sode_2',
-    title: { en: 'Annadana Seva', kn: 'ಅನ್ನದಾನ ಸೇವೆ' },
+    title: { en: 'One day full service (including Annadana)', kn: 'ಒಂದು ದಿನದ ಸಂಪೂರ್ಣ ಸೇವೆ (ಅನ್ನದಾನ ಸಹಿತ)' },
     description: { en: 'Contribution towards mass feeding.', kn: 'ಅನ್ನದಾನಕ್ಕಾಗಿ ದೇಣಿಗೆ.' },
-    amount: 1000,
+    amount: 5001,
     currency: 'INR',
     isActive: true,
     requiresGotra: true,

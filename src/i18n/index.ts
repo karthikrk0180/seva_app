@@ -21,6 +21,8 @@ i18n
     resources,
     lng: 'en', // default language
     fallbackLng: 'en',
+    // React Native (Hermes) may not have Intl.PluralRules; use v3 plural format so no polyfill is needed
+    compatibilityJSON: 'v3',
     interpolation: {
       escapeValue: false,
     },

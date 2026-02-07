@@ -1,6 +1,7 @@
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
 import { HomeScreen } from 'src/screens/home/HomeScreen';
 import { GuruListScreen } from 'src/screens/history/GuruListScreen';
@@ -65,14 +66,28 @@ export type BottomTabParamList = {
 
 const Tab = createBottomTabNavigator<BottomTabParamList>();
 
+const tabScreenOptions = (iconName: string) => ({
+  tabBarIcon: ({ color, size }: { focused: boolean; color: string; size: number }) => (
+    <MaterialIcons name={iconName as any} size={size} color={color} />
+  ),
+});
+
 export const BottomTabs = () => {
   return (
-    <Tab.Navigator screenOptions={{ headerShown: false }}>
-      <Tab.Screen name="HomeStack" component={HomeStack} options={{ tabBarLabel: 'Home' }} />
-      <Tab.Screen name={ROUTES.TABS.HISTORY} component={HistoryStack} options={{ tabBarLabel: 'History' }} />
-      <Tab.Screen name={ROUTES.TABS.SEVA} component={SevaStack} options={{ tabBarLabel: 'Seva' }} />
-      <Tab.Screen name={ROUTES.TABS.PROFILE} component={ProfileScreen} options={{ tabBarLabel: 'Profile' }} />
-      <Tab.Screen name={ROUTES.TABS.MORE} component={MoreScreen} options={{ tabBarLabel: 'More' }} />
+    <Tab.Navigator
+      screenOptions={{
+        headerShown: false,
+        tabBarActiveTintColor: '#E65100',
+        tabBarInactiveTintColor: '#757575',
+        tabBarStyle: { paddingBottom: 4, minHeight: 56 },
+        tabBarLabelStyle: { fontSize: 12 },
+      }}
+    >
+      <Tab.Screen name="HomeStack" component={HomeStack} options={{ tabBarLabel: 'Home', ...tabScreenOptions('home') }} />
+      <Tab.Screen name={ROUTES.TABS.HISTORY} component={HistoryStack} options={{ tabBarLabel: 'History', ...tabScreenOptions('auto-stories') }} />
+      <Tab.Screen name={ROUTES.TABS.SEVA} component={SevaStack} options={{ tabBarLabel: 'Seva', ...tabScreenOptions('volunteer-activism') }} />
+      <Tab.Screen name={ROUTES.TABS.PROFILE} component={ProfileScreen} options={{ tabBarLabel: 'Profile', ...tabScreenOptions('person') }} />
+      <Tab.Screen name={ROUTES.TABS.MORE} component={MoreScreen} options={{ tabBarLabel: 'More', ...tabScreenOptions('more-horiz') }} />
     </Tab.Navigator>
   );
 };

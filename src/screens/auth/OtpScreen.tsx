@@ -57,18 +57,26 @@ export const OtpScreen = () => {
     <SafeAreaView style={styles.container}>
       <View style={styles.content}>
         <View style={styles.header}>
-          <Text style={TYPOGRAPHY.h2}>Verify Mobile</Text>
-          <Text style={TYPOGRAPHY.body}>OTP sent to {phoneNumber}</Text>
+          <Text style={[TYPOGRAPHY.h2, styles.title]} maxFontSizeMultiplier={1.3}>
+            Verify Mobile
+          </Text>
+          <Text style={[TYPOGRAPHY.body, styles.phoneHint]} maxFontSizeMultiplier={1.3}>
+            OTP sent to {phoneNumber}
+          </Text>
+          <Text style={[TYPOGRAPHY.caption, styles.helper]} maxFontSizeMultiplier={1.3}>
+            Enter the 6-digit code from the SMS
+          </Text>
         </View>
 
         <Input
           label="Enter OTP"
-          placeholder="123456"
+          placeholder="000000"
           keyboardType="number-pad"
           maxLength={6}
           value={otp}
           onChangeText={setOtp}
-          style={{ letterSpacing: 8, textAlign: 'center', fontSize: 24 }}
+          style={styles.otpInput}
+          accessibilityLabel="One-time password, 6 digits"
         />
 
         <Button 
@@ -99,5 +107,9 @@ const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: COLORS.background },
   content: { flex: 1, padding: SPACING.l, justifyContent: 'center' },
   header: { marginBottom: SPACING.xl, alignItems: 'center' },
-  resendContainer: { marginTop: SPACING.m, alignItems: 'center' }
+  title: { textAlign: 'center', marginBottom: SPACING.xs },
+  phoneHint: { color: COLORS.text.secondary, textAlign: 'center', marginBottom: SPACING.xs },
+  helper: { color: COLORS.text.secondary, textAlign: 'center' },
+  otpInput: { letterSpacing: 8, textAlign: 'center', fontSize: 24 },
+  resendContainer: { marginTop: SPACING.m, alignItems: 'center', minHeight: 48 },
 });

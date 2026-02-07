@@ -1,6 +1,14 @@
 import React from 'react';
-import { TouchableOpacity, Text, StyleSheet, ActivityIndicator, ViewStyle, TextStyle, TouchableOpacityProps } from 'react-native';
-import { COLORS, SPACING, TYPOGRAPHY } from 'src/theme';
+import {
+  TouchableOpacity,
+  Text,
+  StyleSheet,
+  ActivityIndicator,
+  ViewStyle,
+  TextStyle,
+  TouchableOpacityProps,
+} from 'react-native';
+import { COLORS, SPACING, TYPOGRAPHY, MIN_TOUCH_TARGET } from 'src/theme';
 
 interface ButtonProps extends TouchableOpacityProps {
   title: string;
@@ -24,7 +32,7 @@ export const Button = ({
 }: ButtonProps) => {
   const backgroundColor =
     variant === 'primary' ? COLORS.primary : variant === 'secondary' ? COLORS.secondary : 'transparent';
-  
+
   const textColor =
     variant === 'outline' || variant === 'text' ? COLORS.primary : COLORS.text.light;
 
@@ -36,18 +44,27 @@ export const Button = ({
       disabled={disabled || isLoading}
       style={[
         styles.button,
-        { backgroundColor },
+        { backgroundColor, minHeight: MIN_TOUCH_TARGET },
         borderStyle,
         disabled && styles.disabled,
         style,
       ]}
       activeOpacity={0.7}
+      accessibilityRole="button"
+      accessibilityLabel={title}
+      accessibilityState={{ disabled: disabled || isLoading, busy: isLoading }}
+      accessibilityHint={disabled ? 'Button disabled' : undefined}
       {...props}
     >
       {isLoading ? (
         <ActivityIndicator color={textColor} />
       ) : (
-        <Text style={[TYPOGRAPHY.button, { color: textColor }, textStyle]}>{title}</Text>
+        <Text
+          style={[TYPOGRAPHY.button, { color: textColor }, textStyle]}
+          maxFontSizeMultiplier={1.3}
+        >
+          {title}
+        </Text>
       )}
     </TouchableOpacity>
   );
@@ -55,8 +72,7 @@ export const Button = ({
 
 const styles = StyleSheet.create({
   button: {
-    height: 48,
-    borderRadius: 8,
+    borderRadius: 12,
     justifyContent: 'center',
     alignItems: 'center',
     paddingHorizontal: SPACING.l,

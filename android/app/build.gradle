@@ -76,7 +76,7 @@ android {
 
     namespace "com.sodeapp"
     defaultConfig {
-        applicationId "com.sodeapp"
+        applicationId "seva.App.v"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
@@ -117,3 +117,4 @@ dependencies {
 }
 
 apply from: file("../../node_modules/@react-native-community/cli-platform-android/native_modules.gradle"); applyNativeModulesAppBuildGradle(project)
+apply plugin: "com.google.gms.google-services"

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.sodeapp"
+    package="seva.App.v"
     android:versionCode="1"
     android:versionName="1.0" >
 
@@ -23,10 +23,10 @@
     <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
 
     <permission
-        android:name="com.sodeapp.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION"
+        android:name="seva.App.v.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION"
         android:protectionLevel="signature" />
 
-    <uses-permission android:name="com.sodeapp.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION" />
+    <uses-permission android:name="seva.App.v.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION" />
 
     <application
         android:name="com.sodeapp.MainApplication"
@@ -121,7 +121,7 @@
 
         <provider
             android:name="io.invertase.firebase.app.ReactNativeFirebaseAppInitProvider"
-            android:authorities="com.sodeapp.reactnativefirebaseappinitprovider"
+            android:authorities="seva.App.v.reactnativefirebaseappinitprovider"
             android:exported="false"
             android:initOrder="99" />
 
@@ -212,7 +212,7 @@
 
         <provider
             android:name="com.google.firebase.provider.FirebaseInitProvider"
-            android:authorities="com.sodeapp.firebaseinitprovider"
+            android:authorities="seva.App.v.firebaseinitprovider"
             android:directBootAware="true"
             android:exported="false"
             android:initOrder="100" />
@@ -223,7 +223,7 @@
 
         <provider
             android:name="androidx.startup.InitializationProvider"
-            android:authorities="com.sodeapp.androidx-startup"
+            android:authorities="seva.App.v.androidx-startup"
             android:exported="false" >
             <meta-data
                 android:name="androidx.emoji2.text.EmojiCompatInitializer"

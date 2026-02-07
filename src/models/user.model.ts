@@ -19,7 +19,15 @@ export interface User {
     language: 'en' | 'kn';
     notificationsEnabled: boolean;
   };
+  /** Devotee profile (3.8 Seva form, 3.13 Registration) */
+  address?: string;
+  city?: string;
+  state?: string;
+  pincode?: string;
+  nakshatra?: string;
+  rashi?: string;
+  gothra?: string;
 }
 
 // Ensure strict typing for updates
-export type UserProfileUpdate = Partial<Pick<User, 'displayName' | 'email' | 'photoURL' | 'preferences'>>;
+export type UserProfileUpdate = Partial<Pick<User, 'displayName' | 'email' | 'photoURL' | 'preferences' | 'address' | 'city' | 'state' | 'pincode' | 'nakshatra' | 'rashi' | 'gothra'>>;

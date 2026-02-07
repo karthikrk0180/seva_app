@@ -1,57 +1,67 @@
 /**
  * Auth Service
- * Abstracted authentication layer.
- * Currently uses mocks, but structured for Firebase Auth.
+ * Uses Firebase Phone Auth for OTP. Keeps confirmation result in memory for verify step.
  */
 
 import { User } from 'src/models/user.model';
 import { logger } from './logger.service';
-import { delay } from 'src/utils/delay';
+import { firebaseService } from './firebase.service';
+import type { FirebaseAuthTypes } from '@react-native-firebase/auth';
+
+// In-memory: Firebase Phone Auth returns ConfirmationResult (not serializable for nav params)
+let confirmationResult: FirebaseAuthTypes.ConfirmationResult | null = null;
+
+function mapFirebaseUserToAppUser(fbUser: FirebaseAuthTypes.User): User {
+  return {
+    uid: fbUser.uid,
+    phoneNumber: fbUser.phoneNumber ?? '',
+    role: 'devotee',
+    isEmailVerified: fbUser.emailVerified,
+    createdAt: fbUser.metadata.creationTime ?? new Date().toISOString(),
+    lastLoginAt: fbUser.metadata.lastSignInTime ?? new Date().toISOString(),
+    preferences: { language: 'en', notificationsEnabled: true },
+  };
+}
 
 class AuthService {
-  // TODO: Replace with Firebase Auth instance
-  // private auth = auth();
-
   public async loginWithPhone(phoneNumber: string): Promise<string> {
     logger.info(`Initiating login for ${phoneNumber}`);
-    await delay(1000);
-    // TODO: Implement firebase.auth().signInWithPhoneNumber(phoneNumber)
-    return 'mock-verification-id';
+    try {
+      const confirmation = await firebaseService.signInWithPhoneNumber(phoneNumber);
+      confirmationResult = confirmation;
+      return 'firebase-verification-id';
+    } catch (error) {
+      logger.error('Phone sign-in failed', error);
+      throw error;
+    }
   }
 
-  public async verifyOtp(verificationId: string, code: string): Promise<User> {
-    logger.info(`Verifying OTP: ${code} for id: ${verificationId}`);
-    await delay(1000);
-
-    // Mock successful user payload
-    if (code === '123456') {
-      const mockUser: User = {
-        uid: 'user-123',
-        phoneNumber: '+919876543210',
-        role: 'devotee',
-        isEmailVerified: false,
-        createdAt: new Date().toISOString(),
-        lastLoginAt: new Date().toISOString(),
-        preferences: {
-            language: 'en',
-            notificationsEnabled: true
-        }
-      };
-      return mockUser;
+  public async verifyOtp(_verificationId: string, code: string): Promise<User> {
+    logger.info(`Verifying OTP for code length: ${code.length}`);
+    if (!confirmationResult) {
+      throw new Error('No verification in progress. Please request OTP again.');
     }
-
-    throw new Error('Invalid OTP');
+    try {
+      const userCredential = await confirmationResult.confirm(code);
+      confirmationResult = null;
+      const fbUser = userCredential.user;
+      return mapFirebaseUserToAppUser(fbUser);
+    } catch (error) {
+      logger.error('OTP verification failed', error);
+      throw new Error('Invalid or expired OTP. Please try again.');
+    }
   }
 
   public async logout(): Promise<void> {
     logger.info('Logging out');
-    await delay(500);
-    // TODO: auth().signOut()
+    confirmationResult = null;
+    await firebaseService.signOut();
   }
 
   public async getCurrentUser(): Promise<User | null> {
-    // TODO: Listen to onAuthStateChanged
-    return null; 
+    const fbUser = firebaseService.getCurrentUser();
+    if (!fbUser) return null;
+    return mapFirebaseUserToAppUser(fbUser);
   }
 }
 

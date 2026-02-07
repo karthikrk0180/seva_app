@@ -74,9 +74,13 @@ export const SevaListScreen = () => {
         renderItem={renderItem}
         contentContainerStyle={styles.list}
         ListEmptyComponent={
-            <Text style={{ textAlign: 'center', marginTop: 20, color: COLORS.text.secondary }}>
-                No Sevas found.
+          <View style={styles.emptyState}>
+            <Text style={styles.emptyIcon}>📋</Text>
+            <Text style={styles.emptyTitle}>No sevas found</Text>
+            <Text style={styles.emptySubtitle}>
+              Try another location or search term.
             </Text>
+          </View>
         }
       />
     </SafeAreaView>
@@ -121,4 +125,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: SPACING.xs,
   },
+  emptyState: {
+    paddingVertical: SPACING.xxl,
+    paddingHorizontal: SPACING.l,
+    alignItems: 'center',
+  },
+  emptyIcon: { fontSize: 48, marginBottom: SPACING.m },
+  emptyTitle: { ...TYPOGRAPHY.h3, marginBottom: SPACING.xs, textAlign: 'center' },
+  emptySubtitle: { ...TYPOGRAPHY.caption, textAlign: 'center' },
 });
