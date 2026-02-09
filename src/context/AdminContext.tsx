@@ -2,6 +2,8 @@ import React, { createContext, useContext, useState, useEffect, ReactNode } from
 import { Seva, SevaBooking } from 'src/models/seva.model';
 import { logger } from 'src/services/logger.service';
 import { SEVA_DATA } from 'src/screens/seva/seva.data';
+import { Guru, GuruCreateRequest, GuruUpdateRequest } from 'src/models/guru.model';
+import { guruService } from 'src/services/guru.service';
 
 interface AdminContextType {
     sevas: Seva[];
@@ -11,6 +13,9 @@ interface AdminContextType {
     updateSeva: (id: string, updates: Partial<Seva>) => Promise<void>;
     deleteSeva: (id: string) => Promise<void>;
     toggleSevaStatus: (id: string) => Promise<void>;
+    gurus: Guru[];
+    addGuru: (guru: GuruCreateRequest) => Promise<void>;
+    updateGuru: (id: string, updates: GuruUpdateRequest) => Promise<void>;
     refreshData: () => Promise<void>;
 }
 
@@ -19,16 +24,16 @@ const AdminContext = createContext<AdminContextType | undefined>(undefined);
 export const AdminProvider = ({ children }: { children: ReactNode }) => {
     const [sevas, setSevas] = useState<Seva[]>(SEVA_DATA);
     const [bookings] = useState<SevaBooking[]>([]);
+    const [gurus, setGurus] = useState<Guru[]>([]);
     const [isLoading, setIsLoading] = useState(false);
 
     const refreshData = async () => {
         setIsLoading(true);
         try {
-            // Mocking API fetch
             logger.info('Refreshing Admin Data');
-            // In a real app, these would be API calls
-            // const sevasData = await apiService.get('/sevas');
-            // setSevas(sevasData);
+            const gurusData = await guruService.getGurus();
+            setGurus(gurusData);
+            logger.info('Refreshed Gurus', { count: gurusData.length });
         } catch (error) {
             logger.error('Failed to refresh admin data', error);
         } finally {
@@ -62,6 +67,34 @@ export const AdminProvider = ({ children }: { children: ReactNode }) => {
         }
     };
 
+    const addGuru = async (guru: GuruCreateRequest) => {
+        setIsLoading(true);
+        try {
+            const newGuru = await guruService.addGuru(guru);
+            setGurus(prev => [...prev, newGuru]);
+            logger.info('Added new Guru', { newGuru });
+        } catch (error) {
+            logger.error('Failed to add guru', error);
+            throw error;
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    const updateGuru = async (id: string, updates: GuruUpdateRequest) => {
+        setIsLoading(true);
+        try {
+            const updatedGuru = await guruService.updateGuru(id, updates);
+            setGurus(prev => prev.map(g => g.id === id ? updatedGuru : g));
+            logger.info('Updated Guru', { updatedGuru });
+        } catch (error) {
+            logger.error('Failed to update guru', error);
+            throw error;
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
     useEffect(() => {
         refreshData();
     }, []);
@@ -75,6 +108,9 @@ export const AdminProvider = ({ children }: { children: ReactNode }) => {
             updateSeva,
             deleteSeva,
             toggleSevaStatus,
+            gurus,
+            addGuru,
+            updateGuru,
             refreshData
         }}>
             {children}

@@ -1,6 +1,7 @@
 module.exports = {
   presets: ['module:@react-native/babel-preset'],
   plugins: [
+
     [
       'module-resolver',
       {
@@ -11,6 +12,6 @@ module.exports = {
         extensions: ['.ios.js', '.android.js', '.js', '.ts', '.tsx', '.json'],
       },
     ],
-    // 'react-native-reanimated/plugin', // Uncomment if you install react-native-reanimated
+    // 'react-native-reanimated/plugin', // keep this LAST if enabled
   ],
 };

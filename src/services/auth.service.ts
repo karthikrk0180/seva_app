@@ -98,7 +98,16 @@ class AuthService {
   public async logout(): Promise<void> {
     logger.info('Logging out');
     confirmationResult = null;
-    await firebaseService.signOut();
+    lastMockPhoneNumber = null;
+    try {
+      await firebaseService.signOut();
+    } catch (error: any) {
+      // Ignore "no current user" error when using mock auth
+      if (error?.code !== 'auth/no-current-user') {
+        logger.error('Logout error', error);
+        throw error;
+      }
+    }
   }
 
   public async getCurrentUser(): Promise<User | null> {

@@ -15,6 +15,8 @@ import { EventListScreen } from 'src/screens/events/EventListScreen';
 import { AdminDashboardScreen } from 'src/screens/admin/AdminDashboardScreen';
 import { SevaManagementScreen } from 'src/screens/admin/SevaManagementScreen';
 import { SevaFormScreen } from 'src/screens/admin/SevaFormScreen';
+import { GuruManagementScreen } from 'src/screens/admin/GuruManagementScreen';
+import { GuruFormScreen } from 'src/screens/admin/GuruFormScreen';
 import { ROUTES } from 'src/config';
 import { useAuthStore } from 'src/store/auth.store';
 import { AdminProvider } from 'src/context/AdminContext';
@@ -65,6 +67,8 @@ export type AdminStackParamList = {
   [ROUTES.SERVICES.ADMIN]: undefined;
   [ROUTES.SERVICES.SEVA_MANAGEMENT]: undefined;
   SevaForm: { sevaId?: string };
+  [ROUTES.SERVICES.GURU_MANAGEMENT]: undefined;
+  [ROUTES.SERVICES.GURU_FORM]: { guruId?: string };
 };
 const AdminStackNav = createNativeStackNavigator<AdminStackParamList>();
 const AdminStack = () => (
@@ -84,6 +88,16 @@ const AdminStack = () => (
         name="SevaForm"
         component={SevaFormScreen}
         options={({ route }) => ({ title: route.params?.sevaId ? 'Edit Seva' : 'Add Seva' })}
+      />
+      <AdminStackNav.Screen
+        name={ROUTES.SERVICES.GURU_MANAGEMENT}
+        component={GuruManagementScreen}
+        options={{ title: 'Manage Gurus' }}
+      />
+      <AdminStackNav.Screen
+        name={ROUTES.SERVICES.GURU_FORM}
+        component={GuruFormScreen}
+        options={({ route }) => ({ title: (route.params as any)?.guruId ? 'Edit Guru' : 'Add Guru' })}
       />
     </AdminStackNav.Navigator>
   </AdminProvider>

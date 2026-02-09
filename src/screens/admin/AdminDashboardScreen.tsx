@@ -39,6 +39,15 @@ export const AdminDashboardScreen = () => {
 
                     <TouchableOpacity
                         style={styles.card}
+                        onPress={() => navigation.navigate(ROUTES.SERVICES.GURU_MANAGEMENT)}
+                    >
+                        <Text style={styles.icon}>👳‍♂️</Text>
+                        <Text style={styles.cardTitle}>Gurus</Text>
+                        <Text style={TYPOGRAPHY.caption}>Manage Lineage</Text>
+                    </TouchableOpacity>
+
+                    <TouchableOpacity
+                        style={styles.card}
                         onPress={() => console.log('Navigate to Event Management')}
                     >
                         <Text style={styles.icon}>📅</Text>
