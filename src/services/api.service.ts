@@ -25,6 +25,9 @@ class ApiService {
 
     try {
       logger.info(`API Request: ${config.method || 'GET'} ${url}`);
+      if (config.body) {
+        logger.info(`Request Body:`, JSON.parse(config.body as string));
+      }
       
       const response = await fetch(url, {
         ...config,
@@ -39,7 +42,16 @@ class ApiService {
       clearTimeout(id);
 
       if (!response.ok) {
-        throw new Error(`API Error: ${response.status} ${response.statusText}`);
+        // Try to get error details from response body
+        let errorMessage = `API Error: ${response.status} ${response.statusText}`;
+        try {
+          const errorData = await response.json();
+          logger.error(`API Error Details:`, errorData);
+          errorMessage = errorData.message || errorData.error || errorMessage;
+        } catch (e) {
+          // Response body is not JSON, use status text
+        }
+        throw new Error(errorMessage);
       }
 
       // Handle 204 No Content
@@ -72,11 +84,11 @@ class ApiService {
     }
   }
 
-  public get<T>(endpoint: string, headers?: HeadersInit): Promise<T> {
+  public get<T>(endpoint: string, headers?: RequestInit['headers']): Promise<T> {
     return this.request<T>(endpoint, { method: 'GET', headers });
   }
 
-  public post<T>(endpoint: string, body: unknown, headers?: HeadersInit): Promise<T> {
+  public post<T>(endpoint: string, body: unknown, headers?: RequestInit['headers']): Promise<T> {
     return this.request<T>(endpoint, {
       method: 'POST',
       body: JSON.stringify(body),
@@ -84,7 +96,7 @@ class ApiService {
     });
   }
 
-  public put<T>(endpoint: string, body: unknown, headers?: HeadersInit): Promise<T> {
+  public put<T>(endpoint: string, body: unknown, headers?: RequestInit['headers']): Promise<T> {
     return this.request<T>(endpoint, {
       method: 'PUT',
       body: JSON.stringify(body),
@@ -92,7 +104,7 @@ class ApiService {
     });
   }
 
-  public delete<T>(endpoint: string, headers?: HeadersInit): Promise<T> {
+  public delete<T>(endpoint: string, headers?: RequestInit['headers']): Promise<T> {
     return this.request<T>(endpoint, { method: 'DELETE', headers });
   }
 }

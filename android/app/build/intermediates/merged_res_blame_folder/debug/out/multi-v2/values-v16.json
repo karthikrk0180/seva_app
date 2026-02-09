@@ -4,7 +4,7 @@
             "outputFile": "com.sodeapp-mergeDebugResources-41:/values-v16/values-v16.xml",
             "map": [
                 {
-                    "source": "C:\\Users\\Asus\\.gradle\\caches\\transforms-3\\22ceda00b0cc5de78b6dea3877873747\\transformed\\core-1.9.0\\res\\values-v16\\values-v16.xml",
+                    "source": "C:\\Users\\shrey\\.gradle\\caches\\transforms-3\\8aaf51eff77b59769fabfc10840301c1\\transformed\\core-1.9.0\\res\\values-v16\\values-v16.xml",
                     "from": {
                         "startLines": "2",
                         "startColumns": "4",
@@ -14,7 +14,7 @@
                     }
                 },
                 {
-                    "source": "C:\\Users\\Asus\\.gradle\\caches\\transforms-3\\2694e6a1966d83f9c93316086791b963\\transformed\\appcompat-1.6.1\\res\\values-v16\\values-v16.xml",
+                    "source": "C:\\Users\\shrey\\.gradle\\caches\\transforms-3\\51be86c9f861acb905f7bb8a112614f1\\transformed\\appcompat-1.6.1\\res\\values-v16\\values-v16.xml",
                     "from": {
                         "startLines": "2",
                         "startColumns": "4",

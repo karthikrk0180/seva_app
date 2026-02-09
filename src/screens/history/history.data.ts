@@ -11,6 +11,7 @@ export const GURU_DATA: Guru[] = [
       kn: 'ಸೋದೆ ಮಠದ ಮೊದಲ ಪೀಠಾಧಿಪತಿಗಳು.'
     },
     orderInLineage: 1,
+    orderNum: 1,
     isAradhanaApproaching: false
   },
   {
@@ -23,6 +24,7 @@ export const GURU_DATA: Guru[] = [
       kn: 'ಮಹಾನ್ ಯತಿಗಳು, ಕವಿಗಳು ಹಾಗೂ ತತ್ವಜ್ಞಾನಿಗಳು.'
     },
     orderInLineage: 20, // Example order
+    orderNum: 20,
     isAradhanaApproaching: true,
     aradhanaDate: '2026-02-15'
   },
@@ -36,6 +38,7 @@ export const GURU_DATA: Guru[] = [
       kn: 'ಪ್ರಸ್ತುತ ಪೀಠಾಧಿಪತಿಗಳು.'
     },
     orderInLineage: 36,
+    orderNum: 36,
     isAradhanaApproaching: false
   }
 ];

@@ -1,9 +1,9 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
 import { TextInput, View, Text, StyleSheet, TextInputProps } from 'react-native';
 import { COLORS, SPACING, TYPOGRAPHY } from 'src/theme';
 
 interface InputProps extends TextInputProps {
-  label?: string;
+  label?: ReactNode;
   error?: string;
 }
 
@@ -18,7 +18,10 @@ export const Input = ({ label, error, style, ...props }: InputProps) => {
       <TextInput
         style={[styles.input, error ? styles.inputError : {}, style]}
         placeholderTextColor={COLORS.text.secondary}
-        accessibilityLabel={props.accessibilityLabel || label}
+        accessibilityLabel={
+          props.accessibilityLabel ??
+          (typeof label === 'string' ? label : undefined)
+        }
         accessibilityHint={error ? `Error: ${error}` : undefined}
         accessibilityState={{ disabled: props.editable === false }}
         {...props}
