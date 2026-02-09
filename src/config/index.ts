@@ -9,6 +9,7 @@ export const APP_CONFIG = {
   API_BASE_URL: 'https://api.sode.org/v1', // Placeholder for Spring Boot Backend
   SUPPORT_EMAIL: 'support@sode.org',
   WEBSITE_URL: 'https://sode.org',
+  ENABLE_MOCK_AUTH: __DEV__, // Enable mock auth by default in development
 };
 
 export const STORAGE_KEYS = {
@@ -40,5 +41,8 @@ export const ROUTES = {
   SERVICES: {
     ROOM_BOOKING: 'RoomBooking',
     EVENTS: 'EventList',
+    ADMIN: 'AdminDashboard',
+    SEVA_MANAGEMENT: 'SevaManagement',
+    SEVA_FORM: 'SevaForm',
   },
 } as const;

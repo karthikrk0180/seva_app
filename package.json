@@ -4,12 +4,13 @@
   "private": true,
   "scripts": {
     "android": "react-native run-android",
-    "android:emulator": "scripts/start-emulator.bat",
-    "adb-reset": "adb kill-server && adb start-server",
+    "android:emulator": "C:\\Users\\shrey\\AppData\\Local\\Android\\Sdk\\emulator\\emulator.exe -avd Pixel_3a_API_34_extension_level_7_x86_64 -no-snapshot-load",
+    "adb-reset": "C:\\Users\\shrey\\AppData\\Local\\Android\\Sdk\\platform-tools\\adb.exe kill-server && C:\\Users\\shrey\\AppData\\Local\\Android\\Sdk\\platform-tools\\adb.exe start-server",
     "ios": "react-native run-ios",
     "lint": "eslint .",
     "start": "react-native start",
-    "test": "jest"
+    "test": "jest",
+    "listavds": "C:\\Users\\shrey\\AppData\\Local\\Android\\Sdk\\emulator\\emulator.exe -list-avds"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
@@ -21,7 +22,7 @@
     "@react-navigation/bottom-tabs": "^6.5.11",
     "@react-navigation/native": "^6.1.9",
     "@react-navigation/native-stack": "^6.9.17",
-    "date-fns": "^4.1.0",
+    "date-fns": "^3.6.0",
     "i18next": "^23.7.11",
     "react": "18.2.0",
     "react-hook-form": "^7.49.2",
@@ -30,8 +31,7 @@
     "react-native-safe-area-context": "^4.8.2",
     "react-native-screens": "^3.27.0",
     "react-native-svg": "^14.1.0",
-    "react-native-vector-icons": "^10.0.3",
-    "date-fns": "^3.6.0",
+    "react-native-vector-icons": "^10.3.0",
     "victory-native": "^36.6.11",
     "yup": "^1.3.2",
     "zustand": "^4.4.7"

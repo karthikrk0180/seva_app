@@ -19,6 +19,7 @@ export interface Seva {
   requiresGotra: boolean;
   requiresNakshatra: boolean;
   availableDays: number[]; // 0=Sunday, 1=Monday...
+  location?: 'Sode' | 'Udupi';
 }
 
 export type BookingStatus = 'pending' | 'confirmed' | 'completed' | 'cancelled' | 'failed';
