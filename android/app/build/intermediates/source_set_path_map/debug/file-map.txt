@@ -48,8 +48,9 @@ com.sodeapp-packaged_res-46 G:\Sode-Vadiraj-math-app\seva_app\node_modules\@reac
 com.sodeapp-packaged_res-47 G:\Sode-Vadiraj-math-app\seva_app\node_modules\@react-native-firebase\app\android\build\intermediates\packaged_res\debug
 com.sodeapp-packaged_res-48 G:\Sode-Vadiraj-math-app\seva_app\node_modules\@react-native-firebase\auth\android\build\intermediates\packaged_res\debug
 com.sodeapp-packaged_res-49 G:\Sode-Vadiraj-math-app\seva_app\node_modules\@react-native-firebase\messaging\android\build\intermediates\packaged_res\debug
-com.sodeapp-packaged_res-50 G:\Sode-Vadiraj-math-app\seva_app\node_modules\@react-native-voice\voice\android\build\intermediates\packaged_res\debug
-com.sodeapp-packaged_res-51 G:\Sode-Vadiraj-math-app\seva_app\node_modules\react-native-safe-area-context\android\build\intermediates\packaged_res\debug
-com.sodeapp-packaged_res-52 G:\Sode-Vadiraj-math-app\seva_app\node_modules\react-native-screens\android\build\intermediates\packaged_res\debug
-com.sodeapp-packaged_res-53 G:\Sode-Vadiraj-math-app\seva_app\node_modules\react-native-svg\android\build\intermediates\packaged_res\debug
-com.sodeapp-packaged_res-54 G:\Sode-Vadiraj-math-app\seva_app\node_modules\react-native-vector-icons\android\build\intermediates\packaged_res\debug
+com.sodeapp-packaged_res-50 G:\Sode-Vadiraj-math-app\seva_app\node_modules\@react-native-picker\picker\android\build\intermediates\packaged_res\debug
+com.sodeapp-packaged_res-51 G:\Sode-Vadiraj-math-app\seva_app\node_modules\@react-native-voice\voice\android\build\intermediates\packaged_res\debug
+com.sodeapp-packaged_res-52 G:\Sode-Vadiraj-math-app\seva_app\node_modules\react-native-safe-area-context\android\build\intermediates\packaged_res\debug
+com.sodeapp-packaged_res-53 G:\Sode-Vadiraj-math-app\seva_app\node_modules\react-native-screens\android\build\intermediates\packaged_res\debug
+com.sodeapp-packaged_res-54 G:\Sode-Vadiraj-math-app\seva_app\node_modules\react-native-svg\android\build\intermediates\packaged_res\debug
+com.sodeapp-packaged_res-55 G:\Sode-Vadiraj-math-app\seva_app\node_modules\react-native-vector-icons\android\build\intermediates\packaged_res\debug

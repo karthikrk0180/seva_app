@@ -19,6 +19,8 @@ import io.invertase.firebase.app.ReactNativeFirebaseAppPackage;
 import io.invertase.firebase.auth.ReactNativeFirebaseAuthPackage;
 // @react-native-firebase/messaging
 import io.invertase.firebase.messaging.ReactNativeFirebaseMessagingPackage;
+// @react-native-picker/picker
+import com.reactnativecommunity.picker.RNCPickerPackage;
 // @react-native-voice/voice
 import com.wenkesj.voice.VoicePackage;
 // react-native-safe-area-context
@@ -78,6 +80,7 @@ public class PackageList {
       new ReactNativeFirebaseAppPackage(),
       new ReactNativeFirebaseAuthPackage(),
       new ReactNativeFirebaseMessagingPackage(),
+      new RNCPickerPackage(),
       new VoicePackage(),
       new SafeAreaContextPackage(),
       new RNScreensPackage(),

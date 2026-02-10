@@ -10,6 +10,7 @@ MERGED from [:react-native-async-storage_async-storage] G:\Sode-Vadiraj-math-app
 MERGED from [:react-native-firebase_auth] G:\Sode-Vadiraj-math-app\seva_app\node_modules\@react-native-firebase\auth\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:2:1-11:12
 MERGED from [:react-native-firebase_messaging] G:\Sode-Vadiraj-math-app\seva_app\node_modules\@react-native-firebase\messaging\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:2:1-43:12
 MERGED from [:react-native-firebase_app] G:\Sode-Vadiraj-math-app\seva_app\node_modules\@react-native-firebase\app\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:2:1-30:12
+MERGED from [:react-native-picker_picker] G:\Sode-Vadiraj-math-app\seva_app\node_modules\@react-native-picker\picker\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:2:1-7:12
 MERGED from [:react-native-voice_voice] G:\Sode-Vadiraj-math-app\seva_app\node_modules\@react-native-voice\voice\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:2:1-13:12
 MERGED from [:react-native-safe-area-context] G:\Sode-Vadiraj-math-app\seva_app\node_modules\react-native-safe-area-context\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:2:1-7:12
 MERGED from [:react-native-screens] G:\Sode-Vadiraj-math-app\seva_app\node_modules\react-native-screens\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:2:1-7:12
@@ -283,6 +284,8 @@ MERGED from [:react-native-firebase_messaging] G:\Sode-Vadiraj-math-app\seva_app
 MERGED from [:react-native-firebase_messaging] G:\Sode-Vadiraj-math-app\seva_app\node_modules\@react-native-firebase\messaging\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:5:5-44
 MERGED from [:react-native-firebase_app] G:\Sode-Vadiraj-math-app\seva_app\node_modules\@react-native-firebase\app\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:6:5-44
 MERGED from [:react-native-firebase_app] G:\Sode-Vadiraj-math-app\seva_app\node_modules\@react-native-firebase\app\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:6:5-44
+MERGED from [:react-native-picker_picker] G:\Sode-Vadiraj-math-app\seva_app\node_modules\@react-native-picker\picker\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:5:5-44
+MERGED from [:react-native-picker_picker] G:\Sode-Vadiraj-math-app\seva_app\node_modules\@react-native-picker\picker\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:5:5-44
 MERGED from [:react-native-voice_voice] G:\Sode-Vadiraj-math-app\seva_app\node_modules\@react-native-voice\voice\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:6:5-8:54
 MERGED from [:react-native-voice_voice] G:\Sode-Vadiraj-math-app\seva_app\node_modules\@react-native-voice\voice\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:6:5-8:54
 MERGED from [:react-native-safe-area-context] G:\Sode-Vadiraj-math-app\seva_app\node_modules\react-native-safe-area-context\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:5:5-44
