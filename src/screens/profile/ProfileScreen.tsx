@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, Alert, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, Alert, ScrollView, Pressable, Modal } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -10,15 +10,24 @@ import { Input } from 'src/components/common/Input';
 import { useAuthStore } from 'src/store/auth.store';
 import { userService } from 'src/services/user.service';
 import { logger } from 'src/services/logger.service';
+import { Picker } from '@react-native-picker/picker';
 
 const schema = yup.object().shape({
-  firstName: yup.string().required('First name is required'),
-  lastName: yup.string().required('Last name is required'),
-  dob: yup.string(),
+  displayName: yup.string().required('Name is required'),
+  dob: yup
+    .string()
+    .matches(
+      /^(0[1-9]|[12][0-9]|3[01])-(0[1-9]|1[0-2])-\d{4}$/,
+      'Date must be in DD-MM-YYYY format'
+    ),
   gender: yup.string(),
   gotra: yup.string(),
   nakshatra: yup.string(),
+  rashi: yup.string(),
   address: yup.string(),
+  city: yup.string(),
+  state: yup.string(),
+  pincode: yup.string(),
 });
 
 type FormData = yup.InferType<typeof schema>;
@@ -26,34 +35,45 @@ type FormData = yup.InferType<typeof schema>;
 export const ProfileScreen = () => {
   const { user, logout, isLoading: authLoading, refreshUserProfile } = useAuthStore();
   const [isSaving, setIsSaving] = useState(false);
+  const [genderModalVisible, setGenderModalVisible] = useState(false);
+
 
   const { control, handleSubmit, setValue, formState: { errors } } = useForm<FormData>({
     resolver: yupResolver(schema) as any,
     defaultValues: {
-      firstName: '',
-      lastName: '',
+      displayName: '',
       dob: '',
       gender: '',
       gotra: '',
       nakshatra: '',
       address: '',
+      rashi: '',
+      city: '',
+      state: '',
+      pincode: '',
     },
   });
 
   // Populate form with user data
   useEffect(() => {
     if (user) {
-      setValue('firstName', user.firstName || '');
-      setValue('lastName', user.lastName || '');
+      setValue('displayName', user.displayName || '');
       setValue('dob', user.dob || '');
       setValue('gender', user.gender || '');
       setValue('gotra', user.gothra || '');
       setValue('nakshatra', user.nakshatra || '');
+      setValue('rashi', user.rashi || '');
       setValue('address', user.address || '');
+      setValue('city', user.city || '');
+      setValue('state', user.state || '');
+      setValue('pincode', user.pincode || '');
     }
   }, [user, setValue]);
 
   const onSubmit = async (data: FormData) => {
+
+    console.log('SUBMIT CLICKED ✅', data);
+
     if (!user?.phoneNumber) {
       Alert.alert('Error', 'No user logged in');
       return;
@@ -61,18 +81,51 @@ export const ProfileScreen = () => {
 
     setIsSaving(true);
     try {
-      await userService.updateProfileByPhone(user.phoneNumber, {
-        firstName: data.firstName,
-        lastName: data.lastName,
-        dob: data.dob || undefined,
-        gender: data.gender || undefined,
-        gotra: data.gotra || undefined,
-        nakshatra: data.nakshatra || undefined,
-        address: data.address || undefined,
-      });
+      // Construct payload matching the structure provided by user
+      const payload = {
+        userId: user.uid,
+        user: {
+          id: user.uid,
+          phone: user.phoneNumber,
+          displayName: data.displayName,
+          dob: data.dob || null,
+          gender: data.gender || null,
+          role: user.role,
+          email: user.email || null,
+        },
+        // Profile fields
+        address: data.address || null,
+        gothra: data.gotra || null,
+        nakshatra: data.nakshatra || null,
+        rashi: data.rashi || null,
+        city: data.city || null,
+        state: data.state || null,
+        pincode: data.pincode || null,
+      };
+
+      await userService.updateProfileByPhone(user.phoneNumber, payload);
 
       // Refresh user profile in store
       await refreshUserProfile();
+
+      // Optimistic update
+      const currentUser = useAuthStore.getState().user;
+      if (currentUser) {
+        const { setUser } = useAuthStore.getState();
+        setUser({
+          ...currentUser,
+          displayName: data.displayName,
+          gothra: data.gotra,
+          nakshatra: data.nakshatra,
+          rashi: data.rashi,
+          address: data.address,
+          dob: data.dob,
+          gender: data.gender,
+          city: data.city,
+          state: data.state,
+          pincode: data.pincode,
+        });
+      }
 
       Alert.alert('Success', 'Profile updated successfully');
       logger.info('Profile updated successfully');
@@ -83,6 +136,23 @@ export const ProfileScreen = () => {
       setIsSaving(false);
     }
   };
+
+  const formatDob = (text: string) => {
+    // Remove everything except digits
+    const cleaned = text.replace(/\D/g, '');
+
+    let formatted = cleaned;
+
+    if (cleaned.length > 2) {
+      formatted = `${cleaned.slice(0, 2)}-${cleaned.slice(2)}`;
+    }
+    if (cleaned.length > 4) {
+      formatted = `${cleaned.slice(0, 2)}-${cleaned.slice(2, 4)}-${cleaned.slice(4, 8)}`;
+    }
+
+    return formatted.slice(0, 10);
+  };
+
 
   const handleLogout = () => {
     Alert.alert(
@@ -117,30 +187,16 @@ export const ProfileScreen = () => {
           </View>
         </View>
 
-        {/* First Name */}
+        {/* Display Name */}
         <Controller
           control={control}
-          name="firstName"
+          name="displayName"
           render={({ field: { onChange, value } }) => (
             <Input
-              label="First Name *"
+              label="Name"
               value={value}
               onChangeText={onChange}
-              error={errors.firstName?.message}
-            />
-          )}
-        />
-
-        {/* Last Name */}
-        <Controller
-          control={control}
-          name="lastName"
-          render={({ field: { onChange, value } }) => (
-            <Input
-              label="Last Name *"
-              value={value}
-              onChangeText={onChange}
-              error={errors.lastName?.message}
+              error={errors.displayName?.message}
             />
           )}
         />
@@ -151,29 +207,75 @@ export const ProfileScreen = () => {
           name="dob"
           render={({ field: { onChange, value } }) => (
             <Input
-              label="Date of Birth (YYYY-MM-DD)"
+              label="Date of Birth"
               value={value}
-              onChangeText={onChange}
-              placeholder="1990-01-01"
+              placeholder="DD-MM-YYYY"
+              keyboardType="number-pad"
+              maxLength={10}
+              onChangeText={(text) => onChange(formatDob(text))}
               error={errors.dob?.message}
             />
           )}
         />
 
+
         {/* Gender */}
         <Controller
           control={control}
           name="gender"
-          render={({ field: { onChange, value } }) => (
-            <Input
-              label="Gender"
-              value={value}
-              onChangeText={onChange}
-              placeholder="Male/Female/Other"
-              error={errors.gender?.message}
-            />
+          render={({ field: { value } }) => (
+            <View style={styles.verticalField}>
+              <Text style={styles.label}>Gender</Text>
+
+              <Pressable
+                style={styles.dropdown}
+                onPress={() => setGenderModalVisible(true)}
+              >
+                <Text style={styles.dropdownText}>
+                  {value || 'Select Gender'}
+                </Text>
+              </Pressable>
+
+              {/* Modal */}
+              <Modal
+                transparent
+                visible={genderModalVisible}
+                animationType="fade"
+                onRequestClose={() => setGenderModalVisible(false)}
+              >
+                <Pressable
+                  style={styles.modalOverlay}
+                  onPress={() => setGenderModalVisible(false)}
+                >
+                  <View style={styles.modalContent}>
+                    {['Male', 'Female', 'Other'].map((item) => (
+                      <Pressable
+                        key={item}
+                        style={styles.modalItem}
+                        onPress={() => {
+                          setValue('gender', item, {
+                            shouldDirty: true,
+                            shouldTouch: true,
+                          });
+                          setGenderModalVisible(false);
+                        }}
+                      >
+                        <Text style={styles.modalItemText}>{item}</Text>
+                      </Pressable>
+                    ))}
+                  </View>
+                </Pressable>
+              </Modal>
+
+              {errors.gender && (
+                <Text style={styles.errorText}>{errors.gender.message}</Text>
+              )}
+            </View>
           )}
         />
+
+
+
 
         {/* Gotra */}
         <Controller
@@ -199,6 +301,62 @@ export const ProfileScreen = () => {
               value={value}
               onChangeText={onChange}
               error={errors.nakshatra?.message}
+            />
+          )}
+        />
+
+        {/* Rashi */}
+        <Controller
+          control={control}
+          name="rashi"
+          render={({ field: { onChange, value } }) => (
+            <Input
+              label="Rashi"
+              value={value}
+              onChangeText={onChange}
+              error={errors.rashi?.message}
+            />
+          )}
+        />
+
+        {/* City */}
+        <Controller
+          control={control}
+          name="city"
+          render={({ field: { onChange, value } }) => (
+            <Input
+              label="City"
+              value={value}
+              onChangeText={onChange}
+              error={errors.city?.message}
+            />
+          )}
+        />
+
+        {/* State */}
+        <Controller
+          control={control}
+          name="state"
+          render={({ field: { onChange, value } }) => (
+            <Input
+              label="State"
+              value={value}
+              onChangeText={onChange}
+              error={errors.state?.message}
+            />
+          )}
+        />
+
+        {/* Pincode */}
+        <Controller
+          control={control}
+          name="pincode"
+          render={({ field: { onChange, value } }) => (
+            <Input
+              label="Pincode"
+              value={value}
+              onChangeText={onChange}
+              error={errors.pincode?.message}
             />
           )}
         />
@@ -267,4 +425,62 @@ const styles = StyleSheet.create({
   logoutButton: {
     marginTop: SPACING.m,
   },
+  pickerContainer: {
+    borderWidth: 1,
+    borderColor: COLORS.border,
+    borderRadius: 8,
+    height: 50,
+    justifyContent: 'center',
+    backgroundColor: COLORS.surface,
+  },
+  errorText: {
+    color: COLORS.text.error,
+    marginTop: 4,
+    fontSize: 12,
+  },
+  verticalField: {
+    width: '100%',
+    marginBottom: SPACING.m,
+  },
+
+  dropdown: {
+    height: 50,
+    borderWidth: 1,
+    borderColor: COLORS.border,
+    borderRadius: 8,
+    backgroundColor: COLORS.surface,
+    justifyContent: 'center',
+    paddingHorizontal: 12,
+  },
+
+  dropdownText: {
+    fontSize: 16,
+    color: COLORS.text.primary,
+  },
+
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.4)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+
+  modalContent: {
+    width: '80%',
+    backgroundColor: COLORS.surface,
+    borderRadius: 8,
+    overflow: 'hidden',
+  },
+
+  modalItem: {
+    padding: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: COLORS.border,
+  },
+
+  modalItemText: {
+    fontSize: 16,
+    color: COLORS.text.primary,
+  },
+
 });

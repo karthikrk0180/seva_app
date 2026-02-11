@@ -19,7 +19,7 @@ const schema = yup.object().shape({
 type FormData = yup.InferType<typeof schema>;
 
 export const NamePromptScreen = () => {
-    const { user, refreshUserProfile } = useAuthStore();
+    const { user, refreshUserProfile, setUser } = useAuthStore();
     const [isSaving, setIsSaving] = useState(false);
 
     const { control, handleSubmit, formState: { errors } } = useForm<FormData>({
@@ -38,18 +38,34 @@ export const NamePromptScreen = () => {
 
         setIsSaving(true);
         try {
-            await userService.updateProfileByPhone(user.phoneNumber, {
-                firstName: data.firstName,
-                lastName: data.lastName,
-            });
+            // Construct basic payload for name update
+            const displayName = `${data.firstName} ${data.lastName}`;
+            const payload = {
+                id: user.uid,
+                phone: userService.formatPhoneNumber(user.phoneNumber),
+                displayName: displayName,
+            };
 
-            // Refresh user profile to update the store
+            await userService.updateProfileByPhone(user.phoneNumber, payload);
+
+            // Fetch profile - even if backend misses name, we will force update below
             await refreshUserProfile();
 
-            logger.info('Name saved successfully');
+            // Manual optimistic update to fix navigation if backend response is incomplete
+            const currentUser = useAuthStore.getState().user;
+            if (currentUser) {
+                logger.info('Performing optimistic update for user name');
+                setUser({
+                    ...currentUser,
+                    displayName: displayName,
+                });
+            }
+
+            logger.info('Name saved and store updated');
         } catch (error) {
             logger.error('Failed to save name', error);
             Alert.alert('Error', 'Failed to save name. Please try again.');
+        } finally {
             setIsSaving(false);
         }
     };
@@ -68,7 +84,11 @@ export const NamePromptScreen = () => {
                     name="firstName"
                     render={({ field: { onChange, value } }) => (
                         <Input
-                            label="First Name *"
+                            label={
+                                <Text>
+                                    First Name <Text style={{ color: 'red' }}>*</Text>
+                                </Text>
+                            }
                             value={value}
                             onChangeText={onChange}
                             error={errors.firstName?.message}
@@ -83,7 +103,11 @@ export const NamePromptScreen = () => {
                     name="lastName"
                     render={({ field: { onChange, value } }) => (
                         <Input
-                            label="Last Name *"
+                            label={
+                                <Text>
+                                    Last Name <Text style={{ color: 'red' }}>*</Text>
+                                </Text>
+                            }
                             value={value}
                             onChangeText={onChange}
                             error={errors.lastName?.message}

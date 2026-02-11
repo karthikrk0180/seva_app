@@ -18,7 +18,7 @@ interface AuthState {
   error: string | null;
 
   // Actions
-  login: (phone: string, code: string, verificationId: string) => Promise<void>;
+  login: (phone: string, code?: string, verificationId?: string) => Promise<void>;
   logout: () => Promise<void>;
   setUser: (user: User | null) => void;
   refreshUserProfile: () => Promise<void>;
@@ -34,47 +34,19 @@ export const useAuthStore = create<AuthState>()(
 
       setUser: (user) => set({ user, isAuthenticated: !!user }),
 
-      login: async (phone, code, verificationId) => {
-        set({ isLoading: true, error: null });
-        try {
-          // Step 1: Verify OTP and get basic user info
-          const basicUser = await authService.verifyOtp(verificationId, code);
-          logger.info('OTP verified, fetching user profile');
+      login: async (phone: string) => {
+        set({ isLoading: true });
 
-          // Step 2: Fetch complete profile from backend
-          try {
-            const profile = await userService.getProfileByPhone(basicUser.phoneNumber);
-            const completeUser = userService.mapProfileToUser(profile, basicUser);
-            set({ user: completeUser, isAuthenticated: true, isLoading: false });
-            logger.info('User logged in with profile data');
-          } catch (profileError: any) {
-            // If profile doesn't exist (404), create a new profile
-            if (profileError?.message?.includes('404') || profileError?.message?.includes('Not Found')) {
-              logger.info('No profile found, creating new profile for user');
-              try {
-                // Create minimal profile with phone number
-                const newProfile = await userService.createOrUpdateProfileByPhone(
-                  basicUser.phoneNumber,
-                  {} // Empty profile - user will fill in details later
-                );
-                const completeUser = userService.mapProfileToUser(newProfile, basicUser);
-                set({ user: completeUser, isAuthenticated: true, isLoading: false });
-                logger.info('New profile created successfully');
-              } catch (createError) {
-                logger.error('Failed to create profile, using basic user info', createError);
-                set({ user: basicUser, isAuthenticated: true, isLoading: false });
-              }
-            } else {
-              throw profileError;
-            }
-          }
-        } catch (e) {
-          const msg = e instanceof Error ? e.message : 'Login failed';
-          set({ error: msg, isLoading: false });
-          logger.error('Login failed in store', e);
-          throw e;
-        }
+        const profile = await userService.getProfileByPhone(phone);
+        const user = userService.mapProfileToUser(profile);
+
+        set({
+          user,
+          isAuthenticated: true,
+          isLoading: false,
+        });
       },
+
 
       logout: async () => {
         set({ isLoading: true });
@@ -88,17 +60,20 @@ export const useAuthStore = create<AuthState>()(
       },
 
       refreshUserProfile: async () => {
-        const currentUser = get().user;
-        if (!currentUser?.phoneNumber) {
+        const user = get().user;
+        if (!user?.phoneNumber) {
           logger.warn('Cannot refresh profile: no user logged in');
           return;
         }
 
         try {
-          const profile = await userService.getProfileByPhone(currentUser.phoneNumber);
-          const updatedUser = userService.mapProfileToUser(profile, currentUser);
-          set({ user: updatedUser });
-          logger.info('User profile refreshed');
+          const profile = await userService.getProfileByPhone(user.phoneNumber);
+          // logger.info('Refreshed profile from backend:', profile);
+
+          const completeUser = userService.mapProfileToUser(profile, user);
+          // logger.info('Mapped complete user:', completeUser);
+
+          set({ user: completeUser });
         } catch (error) {
           logger.error('Failed to refresh user profile', error);
         }

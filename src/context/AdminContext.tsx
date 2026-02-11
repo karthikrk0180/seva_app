@@ -1,9 +1,10 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { Seva, SevaBooking } from 'src/models/seva.model';
 import { logger } from 'src/services/logger.service';
-import { SEVA_DATA } from 'src/screens/seva/seva.data';
+
 import { Guru, GuruCreateRequest, GuruUpdateRequest } from 'src/models/guru.model';
 import { guruService } from 'src/services/guru.service';
+import { sevaService } from 'src/services/seva.service';
 
 interface AdminContextType {
     sevas: Seva[];
@@ -13,16 +14,18 @@ interface AdminContextType {
     updateSeva: (id: string, updates: Partial<Seva>) => Promise<void>;
     deleteSeva: (id: string) => Promise<void>;
     toggleSevaStatus: (id: string) => Promise<void>;
+
     gurus: Guru[];
     addGuru: (guru: GuruCreateRequest) => Promise<void>;
     updateGuru: (id: string, updates: GuruUpdateRequest) => Promise<void>;
     refreshData: () => Promise<void>;
 }
 
+
 const AdminContext = createContext<AdminContextType | undefined>(undefined);
 
 export const AdminProvider = ({ children }: { children: ReactNode }) => {
-    const [sevas, setSevas] = useState<Seva[]>(SEVA_DATA);
+    const [sevas, setSevas] = useState<Seva[]>([]);
     const [bookings] = useState<SevaBooking[]>([]);
     const [gurus, setGurus] = useState<Guru[]>([]);
     const [isLoading, setIsLoading] = useState(false);
@@ -31,9 +34,13 @@ export const AdminProvider = ({ children }: { children: ReactNode }) => {
         setIsLoading(true);
         try {
             logger.info('Refreshing Admin Data');
-            const gurusData = await guruService.getGurus();
+            const [gurusData, sevasData] = await Promise.all([
+                guruService.getGurus(),
+                sevaService.getAllSevas(),
+            ]);
             setGurus(gurusData);
-            logger.info('Refreshed Gurus', { count: gurusData.length });
+            setSevas(sevasData);
+            logger.info('Refreshed Data', { gurus: gurusData.length, sevas: sevasData.length });
         } catch (error) {
             logger.error('Failed to refresh admin data', error);
         } finally {
@@ -41,23 +48,57 @@ export const AdminProvider = ({ children }: { children: ReactNode }) => {
         }
     };
 
-    const addSeva = async (newSeva: Omit<Seva, 'id'>) => {
-        logger.info('Adding new Seva', { newSeva });
-        const sevaWithId: Seva = {
-            ...newSeva,
-            id: `custom_${Date.now()}`,
-        };
-        setSevas(prev => [...prev, sevaWithId]);
+    const addSeva = async (newSeva: any) => {
+        setIsLoading(true);
+        try {
+            const addedSeva = await sevaService.addSeva(newSeva);
+            setSevas(prev => [...prev, addedSeva]);
+            logger.info('Added new Seva', { id: addedSeva.id });
+        } catch (error) {
+            logger.error('Failed to add seva', error);
+            throw error;
+        } finally {
+            setIsLoading(false);
+        }
     };
 
     const updateSeva = async (id: string, updates: Partial<Seva>) => {
-        logger.info('Updating Seva', { id, updates });
-        setSevas(prev => prev.map(s => s.id === id ? { ...s, ...updates } as Seva : s));
+        // Find existing Seva to merge updates
+        const existingSeva = sevas.find(s => s.id === id);
+        if (!existingSeva) {
+            logger.warn('Attempted to update non-existent Seva', { id });
+            return;
+        }
+
+        const mergedSeva = { ...existingSeva, ...updates };
+
+        // Optimistic update
+        const originalSevas = [...sevas];
+        setSevas(prev => prev.map(s => s.id === id ? mergedSeva : s));
+
+        try {
+            // Send FULL object to backend
+            await sevaService.updateSeva(id, mergedSeva as any);
+            logger.info('Updated Seva', { id });
+        } catch (error) {
+            logger.error('Failed to update seva', error);
+            setSevas(originalSevas); // Revert on failure
+            throw error;
+        }
     };
 
     const deleteSeva = async (id: string) => {
-        logger.info('Deleting Seva', { id });
-        setSevas(prev => prev.filter(s => s.id !== id));
+        setIsLoading(true);
+        try {
+            await sevaService.deleteSeva(id);
+            setSevas(prev => prev.filter(s => s.id !== id));
+            logger.info('Deleted Seva', { id });
+        } catch (error) {
+            logger.error('Failed to delete seva', error);
+            throw error;
+        } finally {
+            setIsLoading(false);
+        }
     };
 
     const toggleSevaStatus = async (id: string) => {
@@ -91,7 +132,8 @@ export const AdminProvider = ({ children }: { children: ReactNode }) => {
             logger.error('Failed to update guru', error);
             throw error;
         } finally {
-            setIsLoading(false);
+            // setIsLoading(false);
+            console.log("Updated");
         }
     };
 
@@ -110,6 +152,7 @@ export const AdminProvider = ({ children }: { children: ReactNode }) => {
             toggleSevaStatus,
             gurus,
             addGuru,
+
             updateGuru,
             refreshData
         }}>

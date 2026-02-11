@@ -5,20 +5,16 @@
 
 export interface Seva {
   id: string;
-  title: {
-    en: string;
-    kn: string;
-  };
-  description: {
-    en: string;
-    kn: string;
-  };
+  titleEn: string;
+  titleKn: string;
+  descEn: string;
+  descKn: string;
   amount: number;
   currency: 'INR' | 'USD';
   isActive: boolean;
-  requiresGotra: boolean;
-  requiresNakshatra: boolean;
-  availableDays: number[]; // 0=Sunday, 1=Monday...
+  reqGothra: boolean;
+  reqNakshatra: boolean;
+  availableDays: number; // Bitmask value
   location?: 'Sode' | 'Udupi';
 }
 
@@ -28,7 +24,7 @@ export interface SevaBooking {
   id: string;
   userId: string;
   sevaId: string;
-  sevaSnapshot: Pick<Seva, 'title' | 'amount'>; // Snapshot value in case price changes
+  sevaSnapshot: Pick<Seva, 'titleEn' | 'titleKn' | 'amount'>; // Snapshot value in case price changes
   bookingDate: string; // ISO Date of booking creation
   sevaDate: string; // ISO Date when Seva is performed
   performeeName: string;

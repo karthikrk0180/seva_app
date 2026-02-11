@@ -6,6 +6,7 @@
 export type UserRole = 'devotee' | 'admin' | 'staff';
 
 export interface User {
+  id: any;
   uid: string;
   phoneNumber: string;
   email?: string;

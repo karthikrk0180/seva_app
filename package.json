@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "android": "react-native run-android",
-    "android:emulator": "C:\\Users\\shrey\\AppData\\Local\\Android\\Sdk\\emulator\\emulator.exe -avd Pixel_3a_API_34_extension_level_7_x86_64 -no-snapshot-load",
+    "android:emulator": "C:\\Users\\shrey\\AppData\\Local\\Android\\Sdk\\emulator\\emulator.exe -avd Pixel_6_Pro_API_34 -no-snapshot-load",
     "adb-reset": "C:\\Users\\shrey\\AppData\\Local\\Android\\Sdk\\platform-tools\\adb.exe kill-server && C:\\Users\\shrey\\AppData\\Local\\Android\\Sdk\\platform-tools\\adb.exe start-server",
     "ios": "react-native run-ios",
     "lint": "eslint .",
@@ -15,9 +15,11 @@
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
     "@react-native-async-storage/async-storage": "^1.21.0",
+    "@react-native-community/datetimepicker": "^8.6.0",
     "@react-native-firebase/app": "^18.7.3",
     "@react-native-firebase/auth": "^18.7.3",
     "@react-native-firebase/messaging": "^18.7.3",
+    "@react-native-picker/picker": "^2.11.4",
     "@react-native-voice/voice": "^3.2.4",
     "@react-navigation/bottom-tabs": "^6.5.11",
     "@react-navigation/native": "^6.1.9",
@@ -53,8 +55,8 @@
     "patch-package": "^8.0.1",
     "postinstall-postinstall": "^2.1.0",
     "prettier": "2.8.8",
-    "react-test-renderer": "18.2.0",
     "react-native-dotenv": "^3.4.9",
+    "react-test-renderer": "18.2.0",
     "typescript": "5.0.4"
   },
   "engines": {

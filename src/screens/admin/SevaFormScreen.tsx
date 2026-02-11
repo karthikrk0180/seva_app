@@ -16,13 +16,13 @@ import { AdminStackParamList } from 'src/navigation/BottomTabs';
 const schema = yup.object().shape({
     titleEn: yup.string().required('Title (English) is required'),
     titleKn: yup.string().required('Title (Kannada) is required'),
-    descriptionEn: yup.string().required('Description (English) is required'),
-    descriptionKn: yup.string().required('Description (Kannada) is required'),
+    descEn: yup.string().required('Description (English) is required'),
+    descKn: yup.string().required('Description (Kannada) is required'),
     amount: yup.number().typeError('Amount must be a number').positive('Amount must be positive').required('Amount is required'),
     location: yup.string().oneOf(['Sode', 'Udupi']).required('Location is required'),
     isActive: yup.boolean().required(),
-    requiresGotra: yup.boolean().required(),
-    requiresNakshatra: yup.boolean().required(),
+    reqGothra: yup.boolean().required(),
+    reqNakshatra: yup.boolean().required(),
 });
 
 type FormData = yup.InferType<typeof schema>;
@@ -39,8 +39,8 @@ export const SevaFormScreen = () => {
         resolver: yupResolver(schema) as any,
         defaultValues: {
             isActive: true,
-            requiresGotra: true,
-            requiresNakshatra: false,
+            reqGothra: true,
+            reqNakshatra: false,
             location: 'Sode',
         }
     });
@@ -49,14 +49,14 @@ export const SevaFormScreen = () => {
         if (isEditing) {
             const seva = sevas.find(s => s.id === editId);
             if (seva) {
-                setValue('titleEn', seva.title.en);
-                setValue('titleKn', seva.title.kn);
-                setValue('descriptionEn', seva.description.en);
-                setValue('descriptionKn', seva.description.kn);
+                setValue('titleEn', seva.titleEn);
+                setValue('titleKn', seva.titleKn);
+                setValue('descEn', seva.descEn);
+                setValue('descKn', seva.descKn);
                 setValue('amount', seva.amount);
                 setValue('isActive', seva.isActive);
-                setValue('requiresGotra', seva.requiresGotra);
-                setValue('requiresNakshatra', seva.requiresNakshatra);
+                setValue('reqGothra', seva.reqGothra);
+                setValue('reqNakshatra', seva.reqNakshatra);
                 // explicitly handling location if it exists on the object
                 if (seva.location) setValue('location', seva.location);
             }
@@ -65,16 +65,17 @@ export const SevaFormScreen = () => {
 
     const onSubmit = async (data: FormData) => {
         try {
-            const sevaData: Omit<Seva, 'id'> = {
-                title: { en: data.titleEn, kn: data.titleKn },
-                description: { en: data.descriptionEn, kn: data.descriptionKn },
+            const sevaData: any = {
+                titleEn: data.titleEn,
+                titleKn: data.titleKn,
+                descEn: data.descEn,
+                descKn: data.descKn,
                 amount: data.amount,
                 currency: 'INR',
                 isActive: data.isActive,
-                requiresGotra: data.requiresGotra,
-                requiresNakshatra: data.requiresNakshatra,
-                availableDays: [0, 1, 2, 3, 4, 5, 6],
-                // including location for mock filtering consistency
+                reqGothra: data.reqGothra,
+                reqNakshatra: data.reqNakshatra,
+                availableDays: 127, // Default to all days (bitmask 1111111)
                 location: data.location,
             };
 
@@ -130,7 +131,7 @@ export const SevaFormScreen = () => {
 
                 <Controller
                     control={control}
-                    name="descriptionEn"
+                    name="descEn"
                     render={({ field: { onChange, value } }) => (
                         <Input
                             label="Description (English)"
@@ -138,14 +139,14 @@ export const SevaFormScreen = () => {
                             onChangeText={onChange}
                             multiline
                             numberOfLines={3}
-                            error={errors.descriptionEn?.message}
+                            error={errors.descEn?.message}
                         />
                     )}
                 />
 
                 <Controller
                     control={control}
-                    name="descriptionKn"
+                    name="descKn"
                     render={({ field: { onChange, value } }) => (
                         <Input
                             label="Description (Kannada)"
@@ -153,7 +154,7 @@ export const SevaFormScreen = () => {
                             onChangeText={onChange}
                             multiline
                             numberOfLines={3}
-                            error={errors.descriptionKn?.message}
+                            error={errors.descKn?.message}
                         />
                     )}
                 />

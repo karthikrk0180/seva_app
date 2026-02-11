@@ -19,7 +19,9 @@ import { GuruManagementScreen } from 'src/screens/admin/GuruManagementScreen';
 import { GuruFormScreen } from 'src/screens/admin/GuruFormScreen';
 import { ROUTES } from 'src/config';
 import { useAuthStore } from 'src/store/auth.store';
+import { useCartStore } from 'src/store/cart.store';
 import { AdminProvider } from 'src/context/AdminContext';
+import { CartScreen } from 'src/screens/cart/CartScreen';
 
 // -- History Stack --
 export type HistoryStackParamList = {
@@ -108,6 +110,7 @@ export type BottomTabParamList = {
   HomeStack: undefined; // Renamed to container
   [ROUTES.TABS.HISTORY]: undefined;
   [ROUTES.TABS.SEVA]: undefined;
+  [ROUTES.TABS.CART]: undefined;
   [ROUTES.TABS.PROFILE]: undefined;
   [ROUTES.TABS.MORE]: undefined;
   AdminStack: undefined;
@@ -129,6 +132,8 @@ const tabScreenOptions = (iconName: string) => ({
 
 export const BottomTabs = () => {
   const { user } = useAuthStore();
+  const { items } = useCartStore();
+  const cartItemCount = items.length;
 
   return (
     <Tab.Navigator
@@ -150,6 +155,15 @@ export const BottomTabs = () => {
       />
       <Tab.Screen name={ROUTES.TABS.HISTORY} component={HistoryStack} options={{ tabBarLabel: 'History', ...tabScreenOptions('auto-stories') }} />
       <Tab.Screen name={ROUTES.TABS.SEVA} component={SevaStack} options={{ tabBarLabel: 'Seva', ...tabScreenOptions('volunteer-activism') }} />
+      <Tab.Screen
+        name={ROUTES.TABS.CART}
+        component={CartScreen}
+        options={{
+          tabBarLabel: 'Cart',
+          ...tabScreenOptions('shopping-cart'),
+          tabBarBadge: cartItemCount > 0 ? cartItemCount : undefined
+        }}
+      />
       <Tab.Screen name={ROUTES.TABS.PROFILE} component={ProfileScreen} options={{ tabBarLabel: 'Profile', ...tabScreenOptions('person') }} />
       <Tab.Screen name={ROUTES.TABS.MORE} component={MoreScreen} options={{ tabBarLabel: 'More', ...tabScreenOptions('more-horiz') }} />
 

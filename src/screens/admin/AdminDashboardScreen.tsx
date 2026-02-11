@@ -1,14 +1,37 @@
 import React from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Alert } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { COLORS, SPACING, TYPOGRAPHY, SHADOWS } from 'src/theme';
 import { useNavigation } from '@react-navigation/native';
 
 import { ROUTES } from 'src/config';
+import { Button } from 'src/components/common/Button';
+import { useAuthStore } from 'src/store/auth.store';
 
 export const AdminDashboardScreen = () => {
     // const { isLoading } = useAdmin();
     const navigation = useNavigation<any>();
+    const { user, logout, isLoading: authLoading, refreshUserProfile } = useAuthStore();
+
+    const handleLogout = () => {
+        Alert.alert(
+            'Logout',
+            'Are you sure you want to logout?',
+            [
+                {
+                    text: 'Cancel',
+                    style: 'cancel',
+                },
+                {
+                    text: 'Logout',
+                    style: 'destructive',
+                    onPress: async () => {
+                        await logout();
+                    },
+                },
+            ]
+        );
+    };
 
     return (
         <SafeAreaView style={styles.container}>
@@ -54,8 +77,17 @@ export const AdminDashboardScreen = () => {
                         <Text style={styles.cardTitle}>Events</Text>
                         <Text style={TYPOGRAPHY.caption}>Update Calendar</Text>
                     </TouchableOpacity>
+
                 </View>
+                <Button
+                    title="Logout"
+                    onPress={handleLogout}
+                    variant="secondary"
+                    isLoading={authLoading}
+                    style={styles.logoutButton}
+                />
             </ScrollView>
+
         </SafeAreaView>
     );
 };
@@ -75,4 +107,10 @@ const styles = StyleSheet.create({
     },
     icon: { fontSize: 32, marginBottom: SPACING.s },
     cardTitle: { ...TYPOGRAPHY.h3, marginBottom: SPACING.xs },
+    logoutButton: {
+        marginTop: SPACING.xl,
+        alignSelf: 'center',
+        width: '60%',
+    },
+
 });

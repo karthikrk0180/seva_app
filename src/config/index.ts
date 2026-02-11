@@ -9,13 +9,14 @@ export const APP_CONFIG = {
   APP_NAME: 'Sode Sri Vadiraja Matha',
   API_TIMEOUT: 10000,
   API_BASE_URL: Platform.select({
-    android: 'http://10.0.2.2:8181',
+    // android: 'http://10.0.2.2:8181',
+    android: 'http://10.174.115.176:8181',
     ios: 'http://localhost:8181',
     default: 'http://localhost:8181',
   }),
   SUPPORT_EMAIL: 'support@sode.org',
   WEBSITE_URL: 'https://sode.org',
-  ENABLE_MOCK_AUTH: __DEV__, // Enable mock auth by default in development
+  ENABLE_MOCK_AUTH: true, // __DEV__, // Always bypass Firebase
 };
 
 export const STORAGE_KEYS = {
@@ -33,6 +34,7 @@ export const ROUTES = {
     HOME: 'Home',
     HISTORY: 'History',
     SEVA: 'Seva',
+    CART: 'Cart',
     PROFILE: 'Profile',
     MORE: 'More',
   },

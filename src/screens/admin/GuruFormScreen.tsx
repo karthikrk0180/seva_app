@@ -44,6 +44,8 @@ export const GuruFormScreen = () => {
 
     useEffect(() => {
         if (isEditing) {
+            console.log('editId', editId);
+            // console.log('gurus', gurus);
             const guru = gurus.find(g => g.id === editId);
             if (guru) {
                 setValue('nameEn', guru.nameEn);
@@ -169,13 +171,13 @@ export const GuruFormScreen = () => {
                     )}
                 />
 
-                <Controller
+                {/* <Controller
                     control={control}
                     name="imageUrl"
                     render={({ field: { onChange, value } }) => (
                         <Input label="Image URL" value={value || ''} onChangeText={onChange} error={errors.imageUrl?.message} />
                     )}
-                />
+                /> */}
 
                 <View style={styles.buttonContainer}>
                     <Button

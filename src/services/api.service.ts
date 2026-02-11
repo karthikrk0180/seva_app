@@ -20,6 +20,7 @@ class ApiService {
 
   private async request<T>(endpoint: string, config: ApiRequestConfig = {}): Promise<T> {
     const url = `${this.baseUrl}${endpoint}`;
+    logger.info(`API Request: ${config.method || 'GET'} ${url}`);
     const controller = new AbortController();
     const id = setTimeout(() => controller.abort(), config.timeout || APP_CONFIG.API_TIMEOUT);
 
