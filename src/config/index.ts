@@ -9,8 +9,8 @@ export const APP_CONFIG = {
   APP_NAME: 'Sode Sri Vadiraja Matha',
   API_TIMEOUT: 10000,
   API_BASE_URL: Platform.select({
-    // android: 'http://10.0.2.2:8181',
-    android: 'http://10.174.115.176:8181',
+    android: 'http://10.0.2.2:8181',
+    // android: 'http://192.168.29.213:8181',
     ios: 'http://localhost:8181',
     default: 'http://localhost:8181',
   }),
@@ -54,5 +54,7 @@ export const ROUTES = {
     SEVA_FORM: 'SevaForm',
     GURU_MANAGEMENT: 'GuruManagement',
     GURU_FORM: 'GuruForm',
+    EVENT_MANAGEMENT: 'EventManagement',
+    EVENT_FORM: 'EventForm',
   },
 } as const;

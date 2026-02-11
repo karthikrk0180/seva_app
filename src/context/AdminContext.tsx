@@ -5,6 +5,8 @@ import { logger } from 'src/services/logger.service';
 import { Guru, GuruCreateRequest, GuruUpdateRequest } from 'src/models/guru.model';
 import { guruService } from 'src/services/guru.service';
 import { sevaService } from 'src/services/seva.service';
+import { eventService } from 'src/services/event.service';
+import { Event, EventCreateRequest, EventUpdateRequest } from 'src/models/event.model';
 
 interface AdminContextType {
     sevas: Seva[];
@@ -19,6 +21,11 @@ interface AdminContextType {
     addGuru: (guru: GuruCreateRequest) => Promise<void>;
     updateGuru: (id: string, updates: GuruUpdateRequest) => Promise<void>;
     refreshData: () => Promise<void>;
+    events: Event[];
+    addEvent: (event: Omit<Event, 'id'>) => Promise<void>;
+    updateEvent: (id: string, updates: Partial<Event>) => Promise<void>;
+    deleteEvent: (id: string) => Promise<void>;
+    toggleEventStatus: (id: string) => Promise<void>;
 }
 
 
@@ -28,19 +35,30 @@ export const AdminProvider = ({ children }: { children: ReactNode }) => {
     const [sevas, setSevas] = useState<Seva[]>([]);
     const [bookings] = useState<SevaBooking[]>([]);
     const [gurus, setGurus] = useState<Guru[]>([]);
+    const [events, setEvents] = useState<Event[]>([]);
     const [isLoading, setIsLoading] = useState(false);
 
     const refreshData = async () => {
         setIsLoading(true);
         try {
             logger.info('Refreshing Admin Data');
-            const [gurusData, sevasData] = await Promise.all([
+            console.log('guruService:', guruService);
+            console.log('sevaService:', sevaService);
+
+            if (!guruService) {
+                logger.error('guruService is undefined in refreshData');
+                return;
+            }
+
+            const [gurusData, sevasData, eventsData] = await Promise.all([
                 guruService.getGurus(),
                 sevaService.getAllSevas(),
+                eventService.getEvents(),
             ]);
             setGurus(gurusData);
             setSevas(sevasData);
-            logger.info('Refreshed Data', { gurus: gurusData.length, sevas: sevasData.length });
+            setEvents(eventsData);
+            logger.info('Refreshed Data', { gurus: gurusData.length, sevas: sevasData.length, events: eventsData.length });
         } catch (error) {
             logger.error('Failed to refresh admin data', error);
         } finally {
@@ -137,6 +155,55 @@ export const AdminProvider = ({ children }: { children: ReactNode }) => {
         }
     };
 
+    const addEvent = async (event: EventCreateRequest) => {
+        setIsLoading(true);
+        try {
+            const newEvent = await eventService.addEvent(event);
+            setEvents(prev => [...prev, newEvent]);
+            logger.info('Added new Event', { newEvent });
+        } catch (error) {
+            logger.error('Failed to add event', error);
+            throw error;
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    const updateEvent = async (id: string, updates: EventUpdateRequest) => {
+        setIsLoading(true);
+        try {
+            const updatedEvent = await eventService.updateEvent(id, updates);
+            setEvents(prev => prev.map(e => e.id === id ? updatedEvent : e));
+            logger.info('Updated Event', { updatedEvent });
+        } catch (error) {
+            logger.error('Failed to update event', error);
+            throw error;
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    const deleteEvent = async (id: string) => {
+        setIsLoading(true);
+        try {
+            await eventService.deleteEvent(id);
+            setEvents(prev => prev.filter(e => e.id !== id));
+            logger.info('Deleted Event', { id });
+        } catch (error) {
+            logger.error('Failed to delete event', error);
+            throw error;
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    const toggleEventStatus = async (id: string) => {
+        const event = events.find(e => e.id === id);
+        if (event) {
+            await updateEvent(id, { isMajor: !event.isMajor });
+        }
+    };
+
     useEffect(() => {
         refreshData();
     }, []);
@@ -152,9 +219,13 @@ export const AdminProvider = ({ children }: { children: ReactNode }) => {
             toggleSevaStatus,
             gurus,
             addGuru,
-
             updateGuru,
-            refreshData
+            refreshData,
+            events,
+            addEvent,
+            updateEvent,
+            deleteEvent,
+            toggleEventStatus
         }}>
             {children}
         </AdminContext.Provider>

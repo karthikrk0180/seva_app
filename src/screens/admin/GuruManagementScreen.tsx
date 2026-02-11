@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, FlatList, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, FlatList, TouchableOpacity, Pressable } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useAdmin } from 'src/context/AdminContext';
 import { COLORS, SPACING, TYPOGRAPHY } from 'src/theme';
@@ -7,6 +7,7 @@ import { Card } from 'src/components/common/Card';
 import { Button } from 'src/components/common/Button';
 import { useNavigation } from '@react-navigation/native';
 import { ROUTES } from 'src/config';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
 export const GuruManagementScreen = () => {
     const { gurus, isLoading, refreshData } = useAdmin();
@@ -37,14 +38,37 @@ export const GuruManagementScreen = () => {
 
     return (
         <SafeAreaView style={styles.container} edges={['bottom']}>
+
             <View style={styles.header}>
-                <Text style={TYPOGRAPHY.h2}>Manage Gurus</Text>
-                <Button
-                    title="+ Add Guru"
-                    onPress={() => navigation.navigate(ROUTES.SERVICES.GURU_FORM)}
-                    variant="primary"
-                    style={styles.addButton}
-                />
+
+                {/* Row 1 */}
+                <View style={styles.headerTopRow}>
+                    <Pressable
+                        onPress={() => navigation.goBack()}
+                        style={styles.backButton}
+                    >
+                        <MaterialIcons
+                            name="arrow-back"
+                            size={22}
+                            color={COLORS.primary}
+                        />
+                    </Pressable>
+
+                    <Text style={[TYPOGRAPHY.h2, styles.headerTitle]}>
+                        Manage Gurus
+                    </Text>
+                </View>
+
+                {/* Row 2 */}
+                <View style={styles.headerButtons}>
+                    <Button
+                        title="+ Add Guru"
+                        onPress={() => navigation.navigate(ROUTES.SERVICES.GURU_FORM)}
+                        variant="primary"
+                        style={styles.actionButton}
+                    />
+                </View>
+
             </View>
 
             <FlatList
@@ -57,7 +81,9 @@ export const GuruManagementScreen = () => {
                 ListEmptyComponent={
                     <View style={styles.empty}>
                         <Text style={TYPOGRAPHY.body}>
-                            {isLoading ? 'Loading Gurus...' : 'No Gurus found. Add one to get started.'}
+                            {isLoading
+                                ? 'Loading Gurus...'
+                                : 'No Gurus found. Add one to get started.'}
                         </Text>
                     </View>
                 }
@@ -69,15 +95,42 @@ export const GuruManagementScreen = () => {
 const styles = StyleSheet.create({
     container: { flex: 1, backgroundColor: COLORS.background },
     header: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        padding: SPACING.l,
-        backgroundColor: COLORS.surface,
-        borderBottomWidth: 1,
-        borderBottomColor: COLORS.border
+        paddingHorizontal: SPACING.m,
+        paddingTop: SPACING.m,
     },
-    addButton: { paddingHorizontal: SPACING.m, height: 40 },
+
+    headerTopRow: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+    },
+
+    headerTitle: {
+        fontSize: 25,
+        fontWeight: '600',
+        marginRight: 10
+    },
+
+    headerButtons: {
+        marginTop: SPACING.m,
+    },
+
+    actionButton: {
+        width: '100%',
+    },
+
+    backButton: {
+        marginTop: 5,
+        marginLeft: 10,
+        marginBottom: 10,
+        backgroundColor: '#e1c7c7ff',
+        borderRadius: 20,
+        width: 40,
+        height: 40,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+
     list: { padding: SPACING.l },
     card: { marginBottom: SPACING.m },
     cardContent: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },

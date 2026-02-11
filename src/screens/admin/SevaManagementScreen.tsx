@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   Switch,
   Alert,
+  Pressable,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
@@ -17,6 +18,7 @@ import { COLORS, SPACING, TYPOGRAPHY } from 'src/theme';
 import { Card } from 'src/components/common/Card';
 import { Button } from 'src/components/common/Button';
 import { logger } from 'src/services/logger.service';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
 export const SevaManagementScreen = () => {
   const navigation = useNavigation<any>();
@@ -190,11 +192,26 @@ export const SevaManagementScreen = () => {
   return (
     <SafeAreaView style={styles.container} edges={['bottom']}>
       {/* Header */}
-      <View style={styles.header}>
-        <Text style={[TYPOGRAPHY.h2, styles.headerTitle]}>
-          Manage Sevas
-        </Text>
 
+      <View style={styles.header}>
+        {/* Row 1 */}
+        <View style={styles.headerTopRow}>
+          <Pressable
+            onPress={() => navigation.goBack()}
+          >
+            <MaterialIcons
+              name="arrow-back"
+              size={28}
+              color={COLORS.primary}
+            />
+          </Pressable>
+
+          <Text style={[TYPOGRAPHY.h2, styles.headerTitle]}>
+            Manage Sevas
+          </Text>
+        </View>
+
+        {/* Row 2 */}
         <View style={styles.headerButtons}>
           <Button
             title="+ Add Seva"
@@ -212,6 +229,7 @@ export const SevaManagementScreen = () => {
           />
         </View>
       </View>
+
 
       {/* Seva List (ALL sevas) */}
       <FlatList
@@ -232,33 +250,58 @@ export const SevaManagementScreen = () => {
 };
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: COLORS.background },
+  container: {
+    flex: 1,
+    backgroundColor: COLORS.background
+  },
 
   header: {
+    paddingHorizontal: SPACING.m,
+    paddingTop: SPACING.m,
+  },
+
+  headerTopRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    padding: SPACING.l,
-    backgroundColor: COLORS.surface,
-    borderBottomWidth: 1,
-    borderBottomColor: COLORS.border,
+    justifyContent: 'space-between',
+  },
+
+  backButton: {
+    marginTop: 5,
+    marginLeft: 10,
+    marginBottom: 10,
+    backgroundColor: '#e1c7c7ff',
+    borderRadius: 20,
+    width: 40,
+    height: 40,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+
+  backArrow: {
+    fontSize: 28,
+    fontWeight: '600',
+    color: COLORS.primary,
+    textAlign: 'center',
+    paddingBottom: 10,
   },
 
   headerTitle: {
-    flex: 1,
-    marginRight: SPACING.m,
+    fontSize: 25,
+    fontWeight: '600',
+    marginRight: '4%'
   },
 
   headerButtons: {
     flexDirection: 'row',
-    gap: SPACING.s,
-    flexWrap: 'wrap',
-    justifyContent: 'flex-end',
+    marginTop: SPACING.m,
   },
 
   addButton: {
-    height: 40,
-    paddingHorizontal: SPACING.m,
+    flex: 1,
+    marginRight: SPACING.s,
   },
+
 
   list: { padding: SPACING.l },
 
@@ -299,4 +342,5 @@ const styles = StyleSheet.create({
     padding: SPACING.xxl,
     alignItems: 'center',
   },
+
 });

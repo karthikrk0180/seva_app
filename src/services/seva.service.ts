@@ -1,7 +1,7 @@
 import { apiService } from './api.service';
 import { Seva } from 'src/models/seva.model';
 
-export interface SevaCreateRequest {
+export interface SevaBase {
     titleEn: string;
     titleKn: string;
     descEn: string;
@@ -14,20 +14,8 @@ export interface SevaCreateRequest {
     availableDays: number;
     location: string;
 }
-
-export interface SevaUpdateRequest {
-    titleEn?: string;
-    titleKn?: string;
-    descEn?: string;
-    descKn?: string;
-    amount?: number;
-    currency?: string;
-    isActive?: boolean;
-    reqGothra?: boolean;
-    reqNakshatra?: boolean;
-    availableDays?: number;
-    location?: string;
-}
+export type SevaCreateRequest = SevaBase;
+export type SevaUpdateRequest = Partial<SevaBase>;
 
 export interface SevaListResponse {
     sevas: Seva[];

@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { View, Text, StyleSheet, ScrollView, Alert } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, Alert, Pressable } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -12,6 +12,7 @@ import { Button } from 'src/components/common/Button';
 import { useAdmin } from 'src/context/AdminContext';
 import { GuruCreateRequest } from 'src/models/guru.model';
 import { AdminStackParamList } from 'src/navigation/BottomTabs';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
 const schema = yup.object().shape({
     nameEn: yup.string().required('Name (English) is required'),
@@ -91,9 +92,24 @@ export const GuruFormScreen = () => {
     return (
         <SafeAreaView style={styles.container} edges={['bottom']}>
             <ScrollView contentContainerStyle={styles.scroll}>
-                <Text style={[TYPOGRAPHY.h2, { marginBottom: SPACING.l }]}>
-                    {isEditing ? 'Edit Guru' : 'Add New Guru'}
-                </Text>
+                {/* Row 1 */}
+                <View style={styles.headerTopRow}>
+                    <Pressable
+                        onPress={() => navigation.goBack()}
+                        style={styles.backButton}
+                    >
+                        <MaterialIcons
+                            name="arrow-back"
+                            size={22}
+                            color={COLORS.primary}
+                        />
+                    </Pressable>
+
+                    <Text style={[TYPOGRAPHY.h2, { marginBottom: SPACING.s, marginRight: 15 }]}>
+                        {isEditing ? 'Edit Guru' : 'Add New Guru'}
+                    </Text>
+                </View>
+
 
                 <Controller
                     control={control}
@@ -195,4 +211,20 @@ const styles = StyleSheet.create({
     container: { flex: 1, backgroundColor: COLORS.background },
     scroll: { padding: SPACING.l },
     buttonContainer: { marginTop: SPACING.xl, marginBottom: SPACING.xxl },
+    backButton: {
+        marginTop: 5,
+        marginLeft: 10,
+        marginBottom: 10,
+        backgroundColor: '#e1c7c7ff',
+        borderRadius: 20,
+        width: 40,
+        height: 40,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    headerTopRow: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+    },
 });
