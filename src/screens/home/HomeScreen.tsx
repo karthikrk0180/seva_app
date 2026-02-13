@@ -7,7 +7,6 @@ import {
   StatusBar,
   Image,
   Dimensions,
-  TextInput,
   TouchableOpacity,
   FlatList,
   NativeSyntheticEvent,
@@ -29,10 +28,13 @@ import { SimpleChart } from 'src/components/common/SimpleChart';
 import { eventService } from 'src/services/event.service';
 import { Event } from 'src/models/event.model';
 
+const LOGO_IMAGE_URI = 'https://res.cloudinary.com/dcgn6ke9j/image/upload/v1771014285/logo_ewzdtu.png';
+const VISHWOTHAM_IMAGE_URI = 'https://res.cloudinary.com/dcgn6ke9j/image/upload/v1771014285/Vishwotham_vghrjc.png';
+const VISHWAVALLABHA_IMAGE_URI = 'https://res.cloudinary.com/dcgn6ke9j/image/upload/v1771014285/Vishwavallabha_n7jddj.png';
+
 export const Images = {
-  Vishwotham: require('../../assets/images/Vishwotham.png'),
-  Vishwavallabha: require('../../assets/images/Vishwavallabha.png'),
-  Logo: require('../../assets/images/logo.png'),
+  Vishwotham: { uri: VISHWOTHAM_IMAGE_URI },
+  Vishwavallabha: { uri: VISHWAVALLABHA_IMAGE_URI },
 };
 
 const { width } = Dimensions.get('window');
@@ -43,7 +45,6 @@ export const HomeScreen = () => {
   const { t, i18n } = useTranslation();
   const navigation = useNavigation<any>();
   const [isVoiceVisible, setIsVoiceVisible] = useState(false);
-  const [searchQuery, setSearchQuery] = useState('');
   const [activeEventIndex, setActiveEventIndex] = useState(0);
 
   const [events, setEvents] = useState<Event[]>([]);
@@ -80,11 +81,8 @@ export const HomeScreen = () => {
   };
 
   const onVoiceResult = (text: string) => {
-    console.log('Voice Result:', text);
     setIsVoiceVisible(false);
-    if (text.toLowerCase().includes('room')) {
-      navigation.navigate(ROUTES.SERVICES.ROOM_BOOKING);
-    }
+    navigation.navigate(ROUTES.SERVICES.SEARCH, { initialQuery: text || undefined });
   };
 
   const onEventScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
@@ -104,7 +102,7 @@ export const HomeScreen = () => {
           <Image source={Images.Vishwotham} style={styles.swamijiOval} />
 
           <View style={styles.centerHeader}>
-            <Image source={Images.Logo} style={styles.logoImage} />
+            <Image source={{ uri: LOGO_IMAGE_URI }} style={styles.logoImage} />
             <Text style={styles.mathaTitle}>{t('matha_title')}</Text>
           </View>
 
@@ -113,15 +111,13 @@ export const HomeScreen = () => {
 
         {/* Row 2: Search Bar with Mic icon */}
         <View style={styles.searchBarContainer}>
-          <TextInput
+          <TouchableOpacity
             style={styles.searchBar}
-            placeholder={t('search_placeholder')}
-            placeholderTextColor={COLORS.text.secondary}
-            value={searchQuery}
-            onChangeText={setSearchQuery}
-            returnKeyType="search"
-            onSubmitEditing={() => console.log('Searching for:', searchQuery)}
-          />
+            activeOpacity={0.7}
+            onPress={() => navigation.navigate(ROUTES.SERVICES.SEARCH)}
+          >
+            <Text style={styles.searchBarPlaceholder}>{t('search_placeholder')}</Text>
+          </TouchableOpacity>
           <Button
             title="🎤"
             variant="secondary"
@@ -322,8 +318,12 @@ const styles = StyleSheet.create({
     paddingHorizontal: SPACING.m,
     borderWidth: 1,
     borderColor: COLORS.border,
+    justifyContent: 'center',
+  },
+  searchBarPlaceholder: {
     ...TYPOGRAPHY.body,
-    fontSize: 12,
+    fontSize: 14,
+    color: COLORS.text.secondary,
   },
   swamijiOval: {
     width: '20%',

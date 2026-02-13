@@ -4,13 +4,13 @@
   "private": true,
   "scripts": {
     "android": "react-native run-android",
-    "android:emulator": "C:\\Users\\shrey\\AppData\\Local\\Android\\Sdk\\emulator\\emulator.exe -avd Pixel_6_Pro_API_34 -no-snapshot-load",
-    "adb-reset": "C:\\Users\\shrey\\AppData\\Local\\Android\\Sdk\\platform-tools\\adb.exe kill-server && C:\\Users\\shrey\\AppData\\Local\\Android\\Sdk\\platform-tools\\adb.exe start-server",
+    "android:emulator": "C:\\Users\\Asus\\AppData\\Local\\Android\\Sdk\\emulator\\emulator.exe -avd Pixel_6_Pro_API_34 -no-snapshot-load",
+    "adb-reset": "scripts\\adb-reset.bat",
     "ios": "react-native run-ios",
     "lint": "eslint .",
     "start": "react-native start",
     "test": "jest",
-    "listavds": "C:\\Users\\shrey\\AppData\\Local\\Android\\Sdk\\emulator\\emulator.exe -list-avds"
+    "listavds": "C:\\Users\\Asus\\AppData\\Local\\Android\\Sdk\\emulator\\emulator.exe -list-avds"
   },
   "dependencies": {
     "@cloudinary/react": "^1.14.4",
@@ -32,6 +32,7 @@
     "react-hook-form": "^7.49.2",
     "react-i18next": "^14.0.0",
     "react-native": "0.73.1",
+    "react-native-encrypted-storage": "^4.0.3",
     "react-native-image-picker": "^8.2.1",
     "react-native-safe-area-context": "^4.8.2",
     "react-native-screens": "3.27.0",

@@ -1,14 +1,16 @@
 /**
  * API Service (REST)
- * Interface for the Java Spring Boot Backend.
- * Supports standard GET, POST, PUT, DELETE methods.
+ * Single global client. Auto-attaches JWT. On 401: clear token and trigger logout.
  */
 
 import { APP_CONFIG } from 'src/config';
 import { logger } from './logger.service';
+import { authTokenService, handleUnauthorized } from './authToken.service';
 
 interface ApiRequestConfig extends RequestInit {
   timeout?: number;
+  /** Set to true to skip attaching Authorization (e.g. login endpoint) */
+  skipAuth?: boolean;
 }
 
 class ApiService {
@@ -19,65 +21,67 @@ class ApiService {
   }
 
   private async request<T>(endpoint: string, config: ApiRequestConfig = {}): Promise<T> {
+    const { skipAuth = false, ...fetchConfig } = config;
     const url = `${this.baseUrl}${endpoint}`;
+
+    const headers: Record<string, string> = {
+      'Content-Type': 'application/json',
+      Accept: 'application/json',
+      ...((fetchConfig.headers as Record<string, string>) || {}),
+    };
+
+    if (!skipAuth) {
+      const token = await authTokenService.getToken();
+      if (token) {
+        headers.Authorization = `Bearer ${token}`;
+      }
+    }
+
     logger.info(`API Request: ${config.method || 'GET'} ${url}`);
     const controller = new AbortController();
     const id = setTimeout(() => controller.abort(), config.timeout || APP_CONFIG.API_TIMEOUT);
 
     try {
-      logger.info(`API Request: ${config.method || 'GET'} ${url}`);
-      if (config.body) {
-        logger.info(`Request Body:`, JSON.parse(config.body as string));
-      }
-      
       const response = await fetch(url, {
-        ...config,
+        ...fetchConfig,
         signal: controller.signal,
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-          ...config.headers,
-        },
+        headers,
       });
 
       clearTimeout(id);
 
+      if (response.status === 401) {
+        handleUnauthorized();
+        const msg = 'Session expired or invalid. Please log in again.';
+        logger.warn(msg);
+        throw new Error(msg);
+      }
+
       if (!response.ok) {
-        // Try to get error details from response body
         let errorMessage = `API Error: ${response.status} ${response.statusText}`;
         try {
           const errorData = await response.json();
-          logger.error(`API Error Details:`, errorData);
+          logger.error('API Error Details:', errorData);
           errorMessage = errorData.message || errorData.error || errorMessage;
-        } catch (e) {
-          // Response body is not JSON, use status text
+        } catch {
+          // Response body is not JSON
         }
         throw new Error(errorMessage);
       }
 
-      // Handle 204 No Content
       if (response.status === 204) {
-          return {} as T;
+        return {} as T;
       }
 
-      let data;
       const contentType = response.headers.get('content-type');
-      if (contentType && contentType.indexOf('application/json') !== -1) {
-          try {
-             data = await response.json();
-          } catch (parseError) {
-             throw new Error('Invalid JSON response from server');
-          }
-      } else {
-          // If not JSON, return text or empty logic depending on need, or throw.
-          // For safety, we treat unexpected content types as errors if we expect JSON.
-          const text = await response.text();
-          logger.warn(`API returned non-JSON: ${text.substring(0, 100)}`);
-          throw new Error('Server returned non-JSON response');
+      if (contentType?.includes('application/json')) {
+        const data = await response.json();
+        return data as T;
       }
 
-      return data as T;
-
+      const text = await response.text();
+      logger.warn(`API returned non-JSON: ${text.substring(0, 100)}`);
+      throw new Error('Server returned non-JSON response');
     } catch (error) {
       clearTimeout(id);
       logger.error(`API Failed: ${endpoint}`, error);
@@ -85,19 +89,29 @@ class ApiService {
     }
   }
 
-  public get<T>(endpoint: string, headers?: RequestInit['headers']): Promise<T> {
-    return this.request<T>(endpoint, { method: 'GET', headers });
+  public get<T>(endpoint: string, headers?: RequestInit['headers'], skipAuth?: boolean): Promise<T> {
+    return this.request<T>(endpoint, { method: 'GET', headers, skipAuth });
   }
 
-  public post<T>(endpoint: string, body: unknown, headers?: RequestInit['headers']): Promise<T> {
+  public post<T>(
+    endpoint: string,
+    body: unknown,
+    headers?: RequestInit['headers'],
+    skipAuth?: boolean,
+  ): Promise<T> {
     return this.request<T>(endpoint, {
       method: 'POST',
       body: JSON.stringify(body),
       headers,
+      skipAuth,
     });
   }
 
-  public put<T>(endpoint: string, body: unknown, headers?: RequestInit['headers']): Promise<T> {
+  public put<T>(
+    endpoint: string,
+    body: unknown,
+    headers?: RequestInit['headers'],
+  ): Promise<T> {
     return this.request<T>(endpoint, {
       method: 'PUT',
       body: JSON.stringify(body),

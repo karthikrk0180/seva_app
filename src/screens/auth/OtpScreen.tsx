@@ -1,27 +1,31 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, Alert } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useRoute, useNavigation } from '@react-navigation/native';
+import { useRoute } from '@react-navigation/native';
 
 import { COLORS, SPACING, TYPOGRAPHY } from 'src/theme';
 import { Button } from 'src/components/common/Button';
 import { Input } from 'src/components/common/Input';
 import { useAuthStore } from 'src/store/auth.store';
 import { authService } from 'src/services/auth.service';
+import { APP_CONFIG } from 'src/config';
 
 export const OtpScreen = () => {
   const route = useRoute<any>();
-  const navigation = useNavigation();
 
-  const { phoneNumber, verificationId } = route.params || {};
+  const { phoneNumber } = route.params || {};
 
   const [otp, setOtp] = useState('');
   const [timer, setTimer] = useState(30);
 
   const { login, isLoading } = useAuthStore();
 
+  const phoneDigits = (phoneNumber || '').replace(/\D/g, '');
+  const isTestPhone = phoneDigits.length >= 10 && APP_CONFIG.DUMMY_OTP_TEST_PHONES?.some((p) => phoneDigits.endsWith(p) || phoneDigits === p);
+  const dummyOtpHint = APP_CONFIG.DUMMY_OTP_DEV && isTestPhone ? `Dev: use ${APP_CONFIG.DUMMY_OTP_DEV} or any 6 digits` : null;
+
   useEffect(() => {
-    let interval: NodeJS.Timeout | undefined;
+    let interval: ReturnType<typeof setInterval> | undefined;
 
     if (timer > 0) {
       interval = setInterval(() => {
@@ -29,17 +33,14 @@ export const OtpScreen = () => {
       }, 1000);
     }
 
-    return () => interval && clearInterval(interval);
+    return () => {
+      if (interval) clearInterval(interval);
+    };
   }, [timer]);
 
   const handleVerify = async () => {
     try {
-      /**
-       * 🔥 OTP IS IGNORED
-       * Backend + profile API decides everything
-       */
-      await login(phoneNumber);
-
+      await login(phoneNumber, otp);
       // Navigation handled automatically by RootNavigator
     } catch (e: any) {
       Alert.alert('Login Failed', e.message || 'Something went wrong');
@@ -68,6 +69,9 @@ export const OtpScreen = () => {
           <Text style={[TYPOGRAPHY.caption, styles.helper]}>
             Enter the 6-digit code from the SMS
           </Text>
+          {dummyOtpHint ? (
+            <Text style={[TYPOGRAPHY.caption, styles.dummyHint]}>{dummyOtpHint}</Text>
+          ) : null}
         </View>
 
         <Input
@@ -118,6 +122,11 @@ const styles = StyleSheet.create({
   helper: {
     color: COLORS.text.secondary,
     textAlign: 'center',
+  },
+  dummyHint: {
+    color: COLORS.primary,
+    marginTop: SPACING.s,
+    fontStyle: 'italic',
   },
   otpInput: {
     letterSpacing: 8,

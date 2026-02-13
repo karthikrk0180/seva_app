@@ -42,23 +42,39 @@ export const AdminProvider = ({ children }: { children: ReactNode }) => {
         setIsLoading(true);
         try {
             logger.info('Refreshing Admin Data');
-            console.log('guruService:', guruService);
-            console.log('sevaService:', sevaService);
-
             if (!guruService) {
                 logger.error('guruService is undefined in refreshData');
                 return;
             }
 
-            const [gurusData, sevasData, eventsData] = await Promise.all([
+            // Fetch in parallel; if one fails (e.g. events DB column missing), still show the rest
+            const [gurusResult, sevasResult, eventsResult] = await Promise.allSettled([
                 guruService.getGurus(),
                 sevaService.getAllSevas(),
                 eventService.getEvents(),
             ]);
-            setGurus(gurusData);
-            setSevas(sevasData);
-            setEvents(eventsData);
-            logger.info('Refreshed Data', { gurus: gurusData.length, sevas: sevasData.length, events: eventsData.length });
+
+            if (gurusResult.status === 'fulfilled') {
+                setGurus(gurusResult.value);
+            } else {
+                logger.error('Failed to load gurus', gurusResult.reason);
+            }
+            if (sevasResult.status === 'fulfilled') {
+                setSevas(sevasResult.value);
+            } else {
+                logger.error('Failed to load sevas', sevasResult.reason);
+            }
+            if (eventsResult.status === 'fulfilled') {
+                setEvents(eventsResult.value);
+            } else {
+                logger.error('Failed to load events (backend may have schema mismatch)', eventsResult.reason);
+                setEvents([]);
+            }
+            logger.info('Refreshed Data', {
+                gurus: gurusResult.status === 'fulfilled' ? gurusResult.value.length : 0,
+                sevas: sevasResult.status === 'fulfilled' ? sevasResult.value.length : 0,
+                events: eventsResult.status === 'fulfilled' ? eventsResult.value.length : 0,
+            });
         } catch (error) {
             logger.error('Failed to refresh admin data', error);
         } finally {

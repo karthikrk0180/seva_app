@@ -78,6 +78,17 @@ export const AdminDashboardScreen = () => {
                         <Text style={TYPOGRAPHY.caption}>Update Calendar</Text>
                     </TouchableOpacity>
 
+                    {user?.role === 'superadmin' && (
+                        <TouchableOpacity
+                            style={styles.card}
+                            onPress={() => navigation.navigate(ROUTES.SERVICES.MEDIA_MANAGEMENT)}
+                        >
+                            <Text style={styles.icon}>🖼️</Text>
+                            <Text style={styles.cardTitle}>Media</Text>
+                            <Text style={TYPOGRAPHY.caption}>Upload & manage images</Text>
+                        </TouchableOpacity>
+                    )}
+
                 </View>
                 <Button
                     title="Logout"

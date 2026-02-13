@@ -14,8 +14,9 @@ import { useAdmin } from 'src/context/AdminContext';
 import { AdminStackParamList } from 'src/navigation/BottomTabs';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { EventCreateRequest } from 'src/models/event.model';
-import { launchImageLibrary } from 'react-native-image-picker';
+import * as ImagePicker from 'react-native-image-picker';
 import { Image } from 'react-native';
+import { mediaService } from 'src/services/media.service';
 
 
 const eventSchema = yup.object().shape({
@@ -127,6 +128,11 @@ export const EventFormScreen = () => {
 
     const pickImage = async (onChange: (uri: string) => void) => {
         try {
+            const launchImageLibrary = ImagePicker?.launchImageLibrary;
+            if (typeof launchImageLibrary !== 'function') {
+                Alert.alert('Error', 'Image picker is not available. Rebuild the app if you just added this feature.');
+                return;
+            }
             const result = await launchImageLibrary({
                 mediaType: 'photo',
                 quality: 0.7,
@@ -144,15 +150,18 @@ export const EventFormScreen = () => {
             }
 
             if (result.assets && result.assets.length > 0) {
-                const uri = result.assets[0].uri;
-                if (!uri) return;
+                const asset = result.assets[0];
+                if (!asset.uri) return;
 
                 setIsUploading(true);
-
                 try {
-                    // upload to server/cloud here
-                    const uploadedUrl = await uploadImage(uri);
-                    onChange(uploadedUrl);
+                    const uploadResult = await mediaService.uploadForUrlOnly({
+                        uri: asset.uri,
+                        type: asset.type || 'image/jpeg',
+                        name: asset.fileName || 'event.jpg',
+                        fileSize: asset.fileSize,
+                    });
+                    onChange(uploadResult.secure_url);
                 } catch (uploadError) {
                     Alert.alert('Upload Error', 'Failed to upload image. Please try again.');
                     console.error('Image upload error:', uploadError);
@@ -165,42 +174,6 @@ export const EventFormScreen = () => {
             Alert.alert('Error', 'An error occurred while picking the image');
         }
     };
-
-    const uploadImage = async (uri: string) => {
-        // NOTE: This currently uses placeholders for Cloudinary.
-        // The user should update these with real values or moved to a central config/service.
-        const CLOUD_NAME = 'dtimrvqqq';
-        const UPLOAD_PRESET = 'first_project';
-
-        const formData = new FormData();
-        const filename = uri.split('/').pop() || 'photo.jpg';
-        const match = /\.(\w+)$/.exec(filename);
-        const type = match ? `image/${match[1]}` : `image`;
-
-        formData.append('file', {
-            uri,
-            name: filename,
-            type,
-        } as any);
-
-        formData.append('upload_preset', UPLOAD_PRESET);
-
-        const res = await fetch(
-            `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`,
-            {
-                method: 'POST',
-                body: formData,
-            }
-        );
-
-        if (!res.ok) {
-            throw new Error(`Upload failed with status ${res.status}`);
-        }
-
-        const data = await res.json();
-        return data.secure_url;
-    };
-
 
     return (
         <SafeAreaView style={styles.container} edges={['bottom']}>

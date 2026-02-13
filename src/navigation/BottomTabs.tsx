@@ -13,12 +13,14 @@ import { MoreScreen } from 'src/screens/more/MoreScreen';
 import { RoomBookingScreen } from 'src/screens/booking/RoomBookingScreen';
 import { EventListScreen } from 'src/screens/events/EventListScreen';
 import { EventDetailScreen } from 'src/screens/events/EventDetailScreen';
+import SearchScreen from 'src/screens/search/SearchScreen';
 import { Event } from 'src/models/event.model';
 import { AdminDashboardScreen } from 'src/screens/admin/AdminDashboardScreen';
 import { SevaManagementScreen } from 'src/screens/admin/SevaManagementScreen';
 import { SevaFormScreen } from 'src/screens/admin/SevaFormScreen';
 import { GuruManagementScreen } from 'src/screens/admin/GuruManagementScreen';
 import { GuruFormScreen } from 'src/screens/admin/GuruFormScreen';
+import { MediaManagementScreen } from 'src/screens/admin/MediaManagementScreen';
 import { ROUTES } from 'src/config';
 import { useAuthStore } from 'src/store/auth.store';
 import { useCartStore } from 'src/store/cart.store';
@@ -54,6 +56,7 @@ const SevaStack = () => (
 // -- Home Stack --
 export type HomeStackParamList = {
   [ROUTES.TABS.HOME]: undefined;
+  [ROUTES.SERVICES.SEARCH]: { initialQuery?: string };
   [ROUTES.SERVICES.ROOM_BOOKING]: undefined;
   [ROUTES.SERVICES.EVENTS]: undefined;
   [ROUTES.SERVICES.EVENT_DETAIL]: { event: Event };
@@ -62,6 +65,7 @@ const HomeStackNav = createNativeStackNavigator<HomeStackParamList>();
 const HomeStack = () => (
   <HomeStackNav.Navigator>
     <HomeStackNav.Screen name={ROUTES.TABS.HOME} component={HomeScreen} options={{ headerShown: false }} />
+    <HomeStackNav.Screen name={ROUTES.SERVICES.SEARCH} component={SearchScreen} options={{ title: 'Search' }} />
     <HomeStackNav.Screen name={ROUTES.SERVICES.ROOM_BOOKING} component={RoomBookingScreen} options={{ title: 'Guest House' }} />
     <HomeStackNav.Screen name={ROUTES.SERVICES.EVENTS} component={EventListScreen} options={{ title: 'Events Calendar' }} />
     <HomeStackNav.Screen name={ROUTES.SERVICES.EVENT_DETAIL} component={EventDetailScreen} options={{ title: 'Event Details' }} />
@@ -75,6 +79,7 @@ export type AdminStackParamList = {
   SevaForm: { sevaId?: string };
   [ROUTES.SERVICES.GURU_MANAGEMENT]: undefined;
   [ROUTES.SERVICES.GURU_FORM]: { guruId?: string };
+  [ROUTES.SERVICES.MEDIA_MANAGEMENT]: undefined;
 };
 const AdminStackNav = createNativeStackNavigator<AdminStackParamList>();
 const AdminStack = () => (
@@ -104,6 +109,11 @@ const AdminStack = () => (
         name={ROUTES.SERVICES.GURU_FORM}
         component={GuruFormScreen}
         options={({ route }) => ({ title: (route.params as any)?.guruId ? 'Edit Guru' : 'Add Guru' })}
+      />
+      <AdminStackNav.Screen
+        name={ROUTES.SERVICES.MEDIA_MANAGEMENT}
+        component={MediaManagementScreen}
+        options={{ title: 'Media' }}
       />
     </AdminStackNav.Navigator>
   </AdminProvider>
@@ -171,7 +181,7 @@ export const BottomTabs = () => {
       <Tab.Screen name={ROUTES.TABS.PROFILE} component={ProfileScreen} options={{ tabBarLabel: 'Profile', ...tabScreenOptions('person') }} />
       <Tab.Screen name={ROUTES.TABS.MORE} component={MoreScreen} options={{ tabBarLabel: 'More', ...tabScreenOptions('more-horiz') }} />
 
-      {user?.role === 'admin' && (
+      {(user?.role === 'admin' || user?.role === 'superadmin') && (
         <Tab.Screen
           name="AdminStack"
           component={AdminStack}

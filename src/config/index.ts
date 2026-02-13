@@ -17,6 +17,10 @@ export const APP_CONFIG = {
   SUPPORT_EMAIL: 'support@sode.org',
   WEBSITE_URL: 'https://sode.org',
   ENABLE_MOCK_AUTH: true, // __DEV__, // Always bypass Firebase
+  /** Dev only: dummy OTP accepted for test phones (no SMS). e.g. 123456 */
+  DUMMY_OTP_DEV: __DEV__ ? '123456' : null,
+  /** Dev only: phone numbers that can use dummy OTP (digits only, e.g. 9999999999) */
+  DUMMY_OTP_TEST_PHONES: __DEV__ ? ['9999999999', '9111111111', '9222222222'] : [],
 };
 
 export const STORAGE_KEYS = {
@@ -47,6 +51,7 @@ export const ROUTES = {
     SEVA_BOOKING: 'SevaBooking',
   },
   SERVICES: {
+    SEARCH: 'Search',
     ROOM_BOOKING: 'RoomBooking',
     EVENTS: 'EventList',
     ADMIN: 'AdminDashboard',
@@ -57,5 +62,6 @@ export const ROUTES = {
     EVENT_MANAGEMENT: 'EventManagement',
     EVENT_FORM: 'EventForm',
     EVENT_DETAIL: 'EventDetail',
+    MEDIA_MANAGEMENT: 'MediaManagement',
   },
 } as const;

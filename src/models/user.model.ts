@@ -3,7 +3,7 @@
  * Represents the authenticated user in the system.
  */
 
-export type UserRole = 'devotee' | 'admin' | 'staff';
+export type UserRole = 'devotee' | 'admin' | 'staff' | 'superadmin';
 
 export interface User {
   id: any;

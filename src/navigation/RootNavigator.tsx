@@ -50,7 +50,7 @@ export const RootNavigator = () => {
             component={NamePromptScreen}
             options={{ headerShown: false, gestureEnabled: false }}
           />
-        ) : user?.role === 'admin' ? (
+        ) : user?.role === 'admin' || user?.role === 'superadmin' ? (
           <RootStack.Screen name="AdminStack" component={AdminStack} />
         ) : (
           <RootStack.Screen name="Main" component={BottomTabs} />

@@ -9,6 +9,7 @@ import { GuruFormScreen } from 'src/screens/admin/GuruFormScreen';
 import { AdminProvider } from 'src/context/AdminContext'; // ✅ ADD THIS
 import { EventManagementScreen } from 'src/screens/admin/EventManagementScreen';
 import { EventFormScreen } from 'src/screens/admin/EventFormScreen';
+import { MediaManagementScreen } from 'src/screens/admin/MediaManagementScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -43,6 +44,10 @@ export const AdminStack = () => {
         <Stack.Screen
           name={ROUTES.SERVICES.EVENT_FORM}
           component={EventFormScreen}
+        />
+        <Stack.Screen
+          name={ROUTES.SERVICES.MEDIA_MANAGEMENT}
+          component={MediaManagementScreen}
         />
       </Stack.Navigator>
     </AdminProvider>
