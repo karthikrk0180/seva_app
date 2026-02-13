@@ -26,7 +26,7 @@ export const GuruDetailScreen = () => {
   const [nextGuruId, setNextGuruId] = React.useState<string | null>(null);
   const [prevGuruId, setPrevGuruId] = React.useState<string | null>(null);
 
-  
+
 
   useEffect(() => {
     if (!id) return;
@@ -61,12 +61,12 @@ export const GuruDetailScreen = () => {
   }, [id]);
 
   const navigateToGuru = (guruId: string | null) => {
-  if (!guruId) return;
+    if (!guruId) return;
 
-  navigation.navigate(ROUTES.HISTORY.GURU_DETAIL, {
-    id: guruId,
-  });
-};
+    navigation.navigate(ROUTES.HISTORY.GURU_DETAIL, {
+      id: guruId,
+    });
+  };
 
 
   if (loading) {
@@ -89,19 +89,17 @@ export const GuruDetailScreen = () => {
       </SafeAreaView>
     );
   }
-
+  const hasImage = !!guru.imageUrl;
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
       <ScrollView contentContainerStyle={styles.scroll}>
-        <View style={styles.imageContainer}>
-          {guru.imageUrl ? (
-            <Image source={{ uri: guru.imageUrl }} style={{ width: '100%', height: '100%', resizeMode: 'cover' }} />
-          ) : (
-            <View style={styles.placeholderImage}>
-              <Text style={{ fontSize: 48 }}>🧘</Text>
-            </View>
-          )}
+         <View style={styles.imageContainer}>
+          <Image source={{ uri: guru.imageUrl }} style={styles.image} />
         </View>
+
+      <View style={[styles.content, { marginTop: hasImage ? -20 : 0 }]}>
+        {/* text content */}
+      </View>
 
         <View style={styles.content}>
           <Text style={TYPOGRAPHY.h1}>{guru.nameEn}</Text>
@@ -157,5 +155,6 @@ const styles = StyleSheet.create({
   },
   divider: { height: 1, backgroundColor: COLORS.border, marginVertical: SPACING.l },
   sectionTitle: { ...TYPOGRAPHY.h3, marginBottom: SPACING.s },
-  footerNav: { flexDirection: 'row', justifyContent: 'space-between', marginTop: SPACING.l }
+  footerNav: { flexDirection: 'row', justifyContent: 'space-between', marginTop: SPACING.l },
+  image: { width: '100%', height: '100%', resizeMode: 'cover' },
 });

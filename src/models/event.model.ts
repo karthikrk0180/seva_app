@@ -7,6 +7,8 @@ export interface Event {
     tithiKn?: string;
     location?: string;
     isMajor?: boolean;
+    isActive?: boolean;
+    imageUrl?: string;
 }
 
 export type EventCreateRequest = Omit<Event, 'id'>;

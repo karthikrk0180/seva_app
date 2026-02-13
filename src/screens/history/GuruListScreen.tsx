@@ -14,6 +14,7 @@ export const GuruListScreen = () => {
   const [gurus, setGurus] = useState<Guru[]>([]);
   const [loading, setLoading] = useState(true);
 
+
   useEffect(() => {
     const loadGurus = async () => {
       try {
@@ -31,33 +32,39 @@ export const GuruListScreen = () => {
     loadGurus();
   }, []);
 
-  const renderItem = ({ item }: { item: Guru }) => (
-    <Card
-      style={styles.card}
-      onPress={() => navigation.navigate(ROUTES.HISTORY.GURU_DETAIL, { id: item.id })}
-    >
-      <View style={styles.cardInner}>
-        {/* Helper function or logic to handle image source could go here */}
-        <View style={styles.imageSection}>
-          {item.imageUrl ? (
-            <Image source={{ uri: item.imageUrl }} style={styles.guruImage} />
-          ) : (
-            <View style={styles.placeholderImage}>
-              <Text style={{ fontSize: 24 }}>🧘</Text>
+  const renderItem = ({ item }: { item: Guru }) => {
+    return (
+      <Card
+        style={styles.card}
+        onPress={() =>
+          navigation.navigate(ROUTES.HISTORY.GURU_DETAIL, { id: item.id })
+        }
+      >
+        <View style={styles.cardInner}>
+          {/* Show image ONLY if available */}
+          {item.imageUrl && (
+            <View style={styles.imageSection}>
+              <Image source={{ uri: item.imageUrl }} style={styles.guruImage} />
             </View>
           )}
-        </View>
 
-        <View style={styles.info}>
-          <Text style={TYPOGRAPHY.h3}>{item.nameEn}</Text>
-          <Text style={TYPOGRAPHY.caption}>{item.period}</Text>
-          <Text style={[TYPOGRAPHY.caption, { color: COLORS.primary }]}>
-            {item.orderNum}{getOrdinal(item.orderNum)} Peetadhipathi
-          </Text>
+
+          <View style={styles.info}>
+            <Text style={TYPOGRAPHY.h3}>{item.nameEn}</Text>
+            <Text style={TYPOGRAPHY.caption}>{item.period}</Text>
+            <Text style={[TYPOGRAPHY.caption, { color: COLORS.primary }]}>
+              {item.orderNum}{getOrdinal(item.orderNum)} Peetadhipathi
+            </Text>
+
+            {/* {item.descEn ? (
+              <Text style={TYPOGRAPHY.body}>{item.descEn}</Text>
+            ) : null} */}
+          </View>
         </View>
-      </View>
-    </Card>
-  );
+      </Card>
+    );
+  };
+
 
   if (loading) {
     return (

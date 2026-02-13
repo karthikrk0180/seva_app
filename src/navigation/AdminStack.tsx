@@ -7,6 +7,8 @@ import { SevaFormScreen } from 'src/screens/admin/SevaFormScreen';
 import { GuruManagementScreen } from 'src/screens/admin/GuruManagementScreen';
 import { GuruFormScreen } from 'src/screens/admin/GuruFormScreen';
 import { AdminProvider } from 'src/context/AdminContext'; // ✅ ADD THIS
+import { EventManagementScreen } from 'src/screens/admin/EventManagementScreen';
+import { EventFormScreen } from 'src/screens/admin/EventFormScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -33,6 +35,14 @@ export const AdminStack = () => {
         <Stack.Screen
           name={ROUTES.SERVICES.GURU_FORM}
           component={GuruFormScreen}
+        />
+        <Stack.Screen
+          name={ROUTES.SERVICES.EVENT_MANAGEMENT}
+          component={EventManagementScreen}
+        />
+        <Stack.Screen
+          name={ROUTES.SERVICES.EVENT_FORM}
+          component={EventFormScreen}
         />
       </Stack.Navigator>
     </AdminProvider>

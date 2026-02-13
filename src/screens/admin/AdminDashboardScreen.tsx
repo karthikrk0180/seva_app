@@ -71,7 +71,7 @@ export const AdminDashboardScreen = () => {
 
                     <TouchableOpacity
                         style={styles.card}
-                        onPress={() => console.log('Navigate to Event Management')}
+                        onPress={() => navigation.navigate(ROUTES.SERVICES.EVENT_MANAGEMENT)}
                     >
                         <Text style={styles.icon}>📅</Text>
                         <Text style={styles.cardTitle}>Events</Text>

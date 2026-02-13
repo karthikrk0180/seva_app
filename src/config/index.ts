@@ -10,7 +10,7 @@ export const APP_CONFIG = {
   API_TIMEOUT: 10000,
   API_BASE_URL: Platform.select({
     android: 'http://10.0.2.2:8181',
-    // android: 'http://192.168.29.213:8181',
+    // android: 'http://192.168.29.138:8181',
     ios: 'http://localhost:8181',
     default: 'http://localhost:8181',
   }),
@@ -56,5 +56,6 @@ export const ROUTES = {
     GURU_FORM: 'GuruForm',
     EVENT_MANAGEMENT: 'EventManagement',
     EVENT_FORM: 'EventForm',
+    EVENT_DETAIL: 'EventDetail',
   },
 } as const;

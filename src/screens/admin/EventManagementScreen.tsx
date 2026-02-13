@@ -11,7 +11,7 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { Event } from 'src/models/event.model';
 
 export const EventManagementScreen = () => {
-    const { events, isLoading, refreshData } = useAdmin();
+    const { events, isLoading, refreshData, deleteEvent } = useAdmin();
     const navigation = useNavigation<any>();
     const [isRefreshing, setIsRefreshing] = useState(false);
 
@@ -31,6 +31,9 @@ export const EventManagementScreen = () => {
                 <View style={styles.actions}>
                     <TouchableOpacity onPress={() => navigation.navigate(ROUTES.SERVICES.EVENT_FORM, { eventId: item.id })}>
                         <Text style={{ fontSize: 18 }}>✏️</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={() => deleteEvent(item.id)}>
+                        <Text style={{ fontSize: 18 }}>❌</Text>
                     </TouchableOpacity>
                 </View>
             </View>

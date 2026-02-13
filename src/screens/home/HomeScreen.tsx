@@ -26,6 +26,8 @@ import { Button } from 'src/components/common/Button';
 import { ROUTES } from 'src/config';
 import { VoiceSearchModal } from 'src/components/common/VoiceSearchModal';
 import { SimpleChart } from 'src/components/common/SimpleChart';
+import { eventService } from 'src/services/event.service';
+import { Event } from 'src/models/event.model';
 
 export const Images = {
   Vishwotham: require('../../assets/images/Vishwotham.png'),
@@ -37,18 +39,15 @@ const { width } = Dimensions.get('window');
 const LOGO_SIZE = Math.min(width * 0.22, 90); // caps on large screens
 const CARD_WIDTH = width - SPACING.m * 2;
 
-const UPCOMING_EVENTS = [
-  { id: '1', titleKey: 'upcoming_events.paryaya.title', date: 'March 15, 2026', descKey: 'upcoming_events.paryaya.desc' },
-  { id: '2', titleKey: 'upcoming_events.aradhana.title', date: 'May 20, 2026', descKey: 'upcoming_events.aradhana.desc' },
-  { id: '3', titleKey: 'upcoming_events.ratha.title', date: 'Feb 25, 2026', descKey: 'upcoming_events.ratha.desc' },
-];
-
 export const HomeScreen = () => {
   const { t, i18n } = useTranslation();
   const navigation = useNavigation<any>();
   const [isVoiceVisible, setIsVoiceVisible] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [activeEventIndex, setActiveEventIndex] = useState(0);
+
+  const [events, setEvents] = useState<Event[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   // Mock Data for Chart
   const sevaStats = [
@@ -59,8 +58,22 @@ export const HomeScreen = () => {
   ];
 
   useEffect(() => {
-    return () => { };
+    fetchEvents();
   }, []);
+
+  const fetchEvents = async () => {
+    try {
+      setIsLoading(true);
+      const data = await eventService.getEvents();
+      // Filter active events and maybe sort by date
+      const activeEvents = data.filter(e => e.isActive !== false);
+      setEvents(activeEvents);
+    } catch (error) {
+      console.error('Error fetching events:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const handleVoiceSearch = () => {
     setIsVoiceVisible(true);
@@ -122,39 +135,56 @@ export const HomeScreen = () => {
 
         {/* Upcoming Events Carousel */}
         <View style={styles.carouselContainer}>
-          <FlatList
-            data={UPCOMING_EVENTS}
-            horizontal
-            pagingEnabled
-            showsHorizontalScrollIndicator={false}
-            onScroll={onEventScroll}
-            scrollEventThrottle={16}
-            keyExtractor={(item) => item.id}
-            renderItem={({ item }) => (
-              <TouchableOpacity
-                onPress={() => navigation.navigate(ROUTES.SERVICES.EVENTS)}
-              >
-                <View style={styles.eventCard}>
-                  <View style={styles.eventInfo}>
-                    <Text style={styles.eventDate}>{item.date}</Text>
-                    <Text style={styles.eventTitle}>{t(item.titleKey)}</Text>
-                    <Text style={styles.eventDesc} numberOfLines={1}>{t(item.descKey)}</Text>
-                  </View>
-                </View>
-              </TouchableOpacity>
-            )}
-          />
-          <View style={styles.pagination}>
-            {UPCOMING_EVENTS.map((_, i) => (
-              <View
-                key={i}
-                style={[
-                  styles.dot,
-                  activeEventIndex === i ? styles.activeDot : {}
-                ]}
+          {isLoading ? (
+            <View style={[styles.eventCard, { justifyContent: 'center', backgroundColor: COLORS.border }]}>
+              <Text style={[TYPOGRAPHY.body, { color: COLORS.text.secondary }]}>Loading Events...</Text>
+            </View>
+          ) : events.length > 0 ? (
+            <>
+              <FlatList
+                data={events}
+                horizontal
+                pagingEnabled
+                showsHorizontalScrollIndicator={false}
+                onScroll={onEventScroll}
+                scrollEventThrottle={16}
+                keyExtractor={(item) => item.id}
+                renderItem={({ item }) => (
+                  <TouchableOpacity
+                    onPress={() => navigation.navigate(ROUTES.SERVICES.EVENT_DETAIL, { event: item })}
+                  >
+                    <View style={styles.eventCard}>
+                      <View style={styles.eventInfo}>
+                        <Text style={styles.eventDate}>{item.eventDate}</Text>
+                        <Text style={styles.eventTitle}>{item.titleEn}</Text>
+                        <Text style={styles.eventDesc} numberOfLines={1}>
+                          {item.tithiEn || item.location || 'Click for details'}
+                        </Text>
+                      </View>
+                      {item.imageUrl && (
+                        <Image source={{ uri: item.imageUrl }} style={styles.eventImage} />
+                      )}
+                    </View>
+                  </TouchableOpacity>
+                )}
               />
-            ))}
-          </View>
+              <View style={styles.pagination}>
+                {events.map((_, i) => (
+                  <View
+                    key={i}
+                    style={[
+                      styles.dot,
+                      activeEventIndex === i ? styles.activeDot : {}
+                    ]}
+                  />
+                ))}
+              </View>
+            </>
+          ) : (
+            <View style={[styles.eventCard, { justifyContent: 'center', backgroundColor: COLORS.border }]}>
+              <Text style={[TYPOGRAPHY.body, { color: COLORS.text.secondary }]}>No upcoming events</Text>
+            </View>
+          )}
         </View>
 
         {/* Quick Links */}
@@ -351,6 +381,12 @@ const styles = StyleSheet.create({
   eventDesc: {
     ...TYPOGRAPHY.caption,
     color: 'rgba(255,255,255,0.9)',
+  },
+  eventImage: {
+    width: 60,
+    height: 60,
+    borderRadius: 8,
+    marginLeft: SPACING.s,
   },
   pagination: {
     flexDirection: 'row',

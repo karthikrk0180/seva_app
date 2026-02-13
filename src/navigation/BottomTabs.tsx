@@ -12,6 +12,8 @@ import { ProfileScreen } from 'src/screens/profile/ProfileScreen';
 import { MoreScreen } from 'src/screens/more/MoreScreen';
 import { RoomBookingScreen } from 'src/screens/booking/RoomBookingScreen';
 import { EventListScreen } from 'src/screens/events/EventListScreen';
+import { EventDetailScreen } from 'src/screens/events/EventDetailScreen';
+import { Event } from 'src/models/event.model';
 import { AdminDashboardScreen } from 'src/screens/admin/AdminDashboardScreen';
 import { SevaManagementScreen } from 'src/screens/admin/SevaManagementScreen';
 import { SevaFormScreen } from 'src/screens/admin/SevaFormScreen';
@@ -54,6 +56,7 @@ export type HomeStackParamList = {
   [ROUTES.TABS.HOME]: undefined;
   [ROUTES.SERVICES.ROOM_BOOKING]: undefined;
   [ROUTES.SERVICES.EVENTS]: undefined;
+  [ROUTES.SERVICES.EVENT_DETAIL]: { event: Event };
 };
 const HomeStackNav = createNativeStackNavigator<HomeStackParamList>();
 const HomeStack = () => (
@@ -61,6 +64,7 @@ const HomeStack = () => (
     <HomeStackNav.Screen name={ROUTES.TABS.HOME} component={HomeScreen} options={{ headerShown: false }} />
     <HomeStackNav.Screen name={ROUTES.SERVICES.ROOM_BOOKING} component={RoomBookingScreen} options={{ title: 'Guest House' }} />
     <HomeStackNav.Screen name={ROUTES.SERVICES.EVENTS} component={EventListScreen} options={{ title: 'Events Calendar' }} />
+    <HomeStackNav.Screen name={ROUTES.SERVICES.EVENT_DETAIL} component={EventDetailScreen} options={{ title: 'Event Details' }} />
   </HomeStackNav.Navigator>
 );
 

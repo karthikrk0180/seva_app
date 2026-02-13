@@ -23,6 +23,8 @@ import io.invertase.firebase.messaging.ReactNativeFirebaseMessagingPackage;
 import com.reactnativecommunity.picker.RNCPickerPackage;
 // @react-native-voice/voice
 import com.wenkesj.voice.VoicePackage;
+// react-native-image-picker
+import com.imagepicker.ImagePickerPackage;
 // react-native-safe-area-context
 import com.th3rdwave.safeareacontext.SafeAreaContextPackage;
 // react-native-screens
@@ -82,6 +84,7 @@ public class PackageList {
       new ReactNativeFirebaseMessagingPackage(),
       new RNCPickerPackage(),
       new VoicePackage(),
+      new ImagePickerPackage(),
       new SafeAreaContextPackage(),
       new RNScreensPackage(),
       new SvgPackage(),

@@ -12,6 +12,7 @@ MERGED from [:react-native-firebase_messaging] G:\Sode-Vadiraj-math-app\seva_app
 MERGED from [:react-native-firebase_app] G:\Sode-Vadiraj-math-app\seva_app\node_modules\@react-native-firebase\app\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:2:1-30:12
 MERGED from [:react-native-picker_picker] G:\Sode-Vadiraj-math-app\seva_app\node_modules\@react-native-picker\picker\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:2:1-7:12
 MERGED from [:react-native-voice_voice] G:\Sode-Vadiraj-math-app\seva_app\node_modules\@react-native-voice\voice\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:2:1-13:12
+MERGED from [:react-native-image-picker] G:\Sode-Vadiraj-math-app\seva_app\node_modules\react-native-image-picker\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:2:1-19:12
 MERGED from [:react-native-safe-area-context] G:\Sode-Vadiraj-math-app\seva_app\node_modules\react-native-safe-area-context\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:2:1-7:12
 MERGED from [:react-native-screens] G:\Sode-Vadiraj-math-app\seva_app\node_modules\react-native-screens\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:2:1-7:12
 MERGED from [:react-native-svg] G:\Sode-Vadiraj-math-app\seva_app\node_modules\react-native-svg\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:2:1-7:12
@@ -78,6 +79,7 @@ MERGED from [androidx.emoji2:emoji2:1.2.0] C:\Users\shrey\.gradle\caches\transfo
 MERGED from [androidx.lifecycle:lifecycle-process:2.4.1] C:\Users\shrey\.gradle\caches\transforms-3\80252a18cde2e8c09678cb7669f15f66\transformed\jetified-lifecycle-process-2.4.1\AndroidManifest.xml:17:1-37:12
 MERGED from [androidx.startup:startup-runtime:1.1.1] C:\Users\shrey\.gradle\caches\transforms-3\dd0796338d1bfe793b28715de443c056\transformed\jetified-startup-runtime-1.1.1\AndroidManifest.xml:17:1-33:12
 MERGED from [androidx.tracing:tracing:1.1.0] C:\Users\shrey\.gradle\caches\transforms-3\559bb5c621904df287bb1a4b395fcfbc\transformed\jetified-tracing-1.1.0\AndroidManifest.xml:17:1-24:12
+MERGED from [androidx.exifinterface:exifinterface:1.3.3] C:\Users\shrey\.gradle\caches\transforms-3\a819e4323f52fac0cd86026ca42c0df3\transformed\exifinterface-1.3.3\AndroidManifest.xml:17:1-24:12
 MERGED from [androidx.coordinatorlayout:coordinatorlayout:1.2.0] C:\Users\shrey\.gradle\caches\transforms-3\2169218eb3cd34e2ac9ae75caacc925c\transformed\coordinatorlayout-1.2.0\AndroidManifest.xml:17:1-24:12
 MERGED from [androidx.autofill:autofill:1.1.0] C:\Users\shrey\.gradle\caches\transforms-3\b985fbc7545c1eafd17af088854de2c1\transformed\jetified-autofill-1.1.0\AndroidManifest.xml:17:1-24:12
 MERGED from [androidx.vectordrawable:vectordrawable-animated:1.1.0] C:\Users\shrey\.gradle\caches\transforms-3\21a1a96266985569d18a417b243335fd\transformed\vectordrawable-animated-1.1.0\AndroidManifest.xml:17:1-24:12
@@ -160,6 +162,8 @@ MERGED from [:react-native-firebase_messaging] G:\Sode-Vadiraj-math-app\seva_app
 MERGED from [:react-native-firebase_messaging] G:\Sode-Vadiraj-math-app\seva_app\node_modules\@react-native-firebase\messaging\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:11:5-41:19
 MERGED from [:react-native-firebase_app] G:\Sode-Vadiraj-math-app\seva_app\node_modules\@react-native-firebase\app\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:8:5-28:19
 MERGED from [:react-native-firebase_app] G:\Sode-Vadiraj-math-app\seva_app\node_modules\@react-native-firebase\app\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:8:5-28:19
+MERGED from [:react-native-image-picker] G:\Sode-Vadiraj-math-app\seva_app\node_modules\react-native-image-picker\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:7:5-17:19
+MERGED from [:react-native-image-picker] G:\Sode-Vadiraj-math-app\seva_app\node_modules\react-native-image-picker\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:7:5-17:19
 MERGED from [com.facebook.react:react-android:0.73.1] C:\Users\shrey\.gradle\caches\transforms-3\b185d1afa186831c26262bdacd6f25ee\transformed\jetified-react-android-0.73.1-debug\AndroidManifest.xml:18:5-22:19
 MERGED from [com.facebook.react:react-android:0.73.1] C:\Users\shrey\.gradle\caches\transforms-3\b185d1afa186831c26262bdacd6f25ee\transformed\jetified-react-android-0.73.1-debug\AndroidManifest.xml:18:5-22:19
 MERGED from [com.google.firebase:firebase-auth:22.3.1] C:\Users\shrey\.gradle\caches\transforms-3\65fa2c47daafffe2bff12fbd0c6d7cb0\transformed\jetified-firebase-auth-22.3.1\AndroidManifest.xml:28:5-73:19
@@ -288,6 +292,8 @@ MERGED from [:react-native-picker_picker] G:\Sode-Vadiraj-math-app\seva_app\node
 MERGED from [:react-native-picker_picker] G:\Sode-Vadiraj-math-app\seva_app\node_modules\@react-native-picker\picker\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:5:5-44
 MERGED from [:react-native-voice_voice] G:\Sode-Vadiraj-math-app\seva_app\node_modules\@react-native-voice\voice\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:6:5-8:54
 MERGED from [:react-native-voice_voice] G:\Sode-Vadiraj-math-app\seva_app\node_modules\@react-native-voice\voice\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:6:5-8:54
+MERGED from [:react-native-image-picker] G:\Sode-Vadiraj-math-app\seva_app\node_modules\react-native-image-picker\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:5:5-44
+MERGED from [:react-native-image-picker] G:\Sode-Vadiraj-math-app\seva_app\node_modules\react-native-image-picker\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:5:5-44
 MERGED from [:react-native-safe-area-context] G:\Sode-Vadiraj-math-app\seva_app\node_modules\react-native-safe-area-context\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:5:5-44
 MERGED from [:react-native-safe-area-context] G:\Sode-Vadiraj-math-app\seva_app\node_modules\react-native-safe-area-context\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:5:5-44
 MERGED from [:react-native-screens] G:\Sode-Vadiraj-math-app\seva_app\node_modules\react-native-screens\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:5:5-44
@@ -420,6 +426,8 @@ MERGED from [androidx.startup:startup-runtime:1.1.1] C:\Users\shrey\.gradle\cach
 MERGED from [androidx.startup:startup-runtime:1.1.1] C:\Users\shrey\.gradle\caches\transforms-3\dd0796338d1bfe793b28715de443c056\transformed\jetified-startup-runtime-1.1.1\AndroidManifest.xml:21:5-23:41
 MERGED from [androidx.tracing:tracing:1.1.0] C:\Users\shrey\.gradle\caches\transforms-3\559bb5c621904df287bb1a4b395fcfbc\transformed\jetified-tracing-1.1.0\AndroidManifest.xml:20:5-22:41
 MERGED from [androidx.tracing:tracing:1.1.0] C:\Users\shrey\.gradle\caches\transforms-3\559bb5c621904df287bb1a4b395fcfbc\transformed\jetified-tracing-1.1.0\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.exifinterface:exifinterface:1.3.3] C:\Users\shrey\.gradle\caches\transforms-3\a819e4323f52fac0cd86026ca42c0df3\transformed\exifinterface-1.3.3\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.exifinterface:exifinterface:1.3.3] C:\Users\shrey\.gradle\caches\transforms-3\a819e4323f52fac0cd86026ca42c0df3\transformed\exifinterface-1.3.3\AndroidManifest.xml:20:5-22:41
 MERGED from [androidx.coordinatorlayout:coordinatorlayout:1.2.0] C:\Users\shrey\.gradle\caches\transforms-3\2169218eb3cd34e2ac9ae75caacc925c\transformed\coordinatorlayout-1.2.0\AndroidManifest.xml:20:5-22:41
 MERGED from [androidx.coordinatorlayout:coordinatorlayout:1.2.0] C:\Users\shrey\.gradle\caches\transforms-3\2169218eb3cd34e2ac9ae75caacc925c\transformed\coordinatorlayout-1.2.0\AndroidManifest.xml:20:5-22:41
 MERGED from [androidx.autofill:autofill:1.1.0] C:\Users\shrey\.gradle\caches\transforms-3\b985fbc7545c1eafd17af088854de2c1\transformed\jetified-autofill-1.1.0\AndroidManifest.xml:20:5-22:41
@@ -620,6 +628,22 @@ ADDED from [:react-native-firebase_app] G:\Sode-Vadiraj-math-app\seva_app\node_m
 		ADDED from [:react-native-firebase_app] G:\Sode-Vadiraj-math-app\seva_app\node_modules\@react-native-firebase\app\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:27:13-35
 	android:name
 		ADDED from [:react-native-firebase_app] G:\Sode-Vadiraj-math-app\seva_app\node_modules\@react-native-firebase\app\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:24:13-88
+provider#com.imagepicker.ImagePickerProvider
+ADDED from [:react-native-image-picker] G:\Sode-Vadiraj-math-app\seva_app\node_modules\react-native-image-picker\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:8:9-16:20
+	android:grantUriPermissions
+		ADDED from [:react-native-image-picker] G:\Sode-Vadiraj-math-app\seva_app\node_modules\react-native-image-picker\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:12:13-47
+	android:authorities
+		ADDED from [:react-native-image-picker] G:\Sode-Vadiraj-math-app\seva_app\node_modules\react-native-image-picker\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:10:13-71
+	android:exported
+		ADDED from [:react-native-image-picker] G:\Sode-Vadiraj-math-app\seva_app\node_modules\react-native-image-picker\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:11:13-37
+	android:name
+		ADDED from [:react-native-image-picker] G:\Sode-Vadiraj-math-app\seva_app\node_modules\react-native-image-picker\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:9:13-63
+meta-data#android.support.FILE_PROVIDER_PATHS
+ADDED from [:react-native-image-picker] G:\Sode-Vadiraj-math-app\seva_app\node_modules\react-native-image-picker\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:13:13-15:70
+	android:resource
+		ADDED from [:react-native-image-picker] G:\Sode-Vadiraj-math-app\seva_app\node_modules\react-native-image-picker\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:15:17-67
+	android:name
+		ADDED from [:react-native-image-picker] G:\Sode-Vadiraj-math-app\seva_app\node_modules\react-native-image-picker\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:14:17-67
 uses-permission#android.permission.SYSTEM_ALERT_WINDOW
 ADDED from [com.facebook.react:react-android:0.73.1] C:\Users\shrey\.gradle\caches\transforms-3\b185d1afa186831c26262bdacd6f25ee\transformed\jetified-react-android-0.73.1-debug\AndroidManifest.xml:16:5-78
 	android:name
