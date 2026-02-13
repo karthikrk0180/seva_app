@@ -242,7 +242,7 @@ export const EventFormScreen = () => {
 
                 <Controller
                     control={control}
-                    name="eventDate"
+                    name="eventDate" 
                     render={({ field: { onChange, value } }) => (
                         <Input
                             label="Event Date (YYYY-MM-DD)"
