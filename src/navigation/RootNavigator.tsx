@@ -5,22 +5,38 @@ import { useAuthStore } from 'src/store/auth.store';
 import { useAppStore } from 'src/store/app.store';
 import { AuthStack } from './AuthStack';
 import { BottomTabs } from './BottomTabs';
+import { NamePromptScreen } from 'src/screens/profile/NamePromptScreen';
+import { AdminStack } from './AdminStack';
 import { linking } from './linking';
 import { logger } from 'src/services/logger.service';
 
 const RootStack = createNativeStackNavigator();
 
 export const RootNavigator = () => {
-  const { isAuthenticated } = useAuthStore();
+  const { isAuthenticated, user } = useAuthStore();
   const { initializeApp, isInitialized } = useAppStore();
 
   useEffect(() => {
     initializeApp();
   }, [initializeApp]);
 
+  // Check if user needs to complete their profile
+  const needsName = isAuthenticated && user && !user.firstName && !user.displayName;
+
+  useEffect(() => {
+    logger.info('RootNavigator State', {
+      isAuthenticated,
+      hasUser: !!user,
+      displayName: user?.displayName,
+      needsName,
+      role: user?.role
+    });
+  }, [isAuthenticated, user, needsName]);
+
+
   if (!isInitialized) {
     // TODO: Return a proper Splash Screen component
-    return null; 
+    return null;
   }
 
   return (
@@ -28,6 +44,14 @@ export const RootNavigator = () => {
       <RootStack.Navigator screenOptions={{ headerShown: false }}>
         {!isAuthenticated ? (
           <RootStack.Screen name="Auth" component={AuthStack} />
+        ) : needsName ? (
+          <RootStack.Screen
+            name="NamePrompt"
+            component={NamePromptScreen}
+            options={{ headerShown: false, gestureEnabled: false }}
+          />
+        ) : user?.role === 'admin' ? (
+          <RootStack.Screen name="AdminStack" component={AdminStack} />
         ) : (
           <RootStack.Screen name="Main" component={BottomTabs} />
         )}

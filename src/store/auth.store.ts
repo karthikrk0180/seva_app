@@ -7,6 +7,7 @@ import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import { User } from 'src/models/user.model';
 import { authService } from 'src/services/auth.service';
+import { userService } from 'src/services/user.service';
 import { logger } from 'src/services/logger.service';
 import { storage } from 'src/utils/storage';
 
@@ -17,14 +18,15 @@ interface AuthState {
   error: string | null;
 
   // Actions
-  login: (phone: string, code: string, verificationId: string) => Promise<void>;
+  login: (phone: string, code?: string, verificationId?: string) => Promise<void>;
   logout: () => Promise<void>;
   setUser: (user: User | null) => void;
+  refreshUserProfile: () => Promise<void>;
 }
 
 export const useAuthStore = create<AuthState>()(
   persist(
-    (set) => ({
+    (set, get) => ({
       user: null,
       isAuthenticated: false,
       isLoading: false,
@@ -32,19 +34,19 @@ export const useAuthStore = create<AuthState>()(
 
       setUser: (user) => set({ user, isAuthenticated: !!user }),
 
-      login: async (phone, code, verificationId) => {
-        set({ isLoading: true, error: null });
-        try {
-          const user = await authService.verifyOtp(verificationId, code);
-          set({ user, isAuthenticated: true, isLoading: false });
-          logger.info('User logged in via store');
-        } catch (e) {
-          const msg = e instanceof Error ? e.message : 'Login failed';
-          set({ error: msg, isLoading: false });
-          logger.error('Login failed in store', e);
-          throw e;
-        }
+      login: async (phone: string) => {
+        set({ isLoading: true });
+
+        const profile = await userService.getProfileByPhone(phone);
+        const user = userService.mapProfileToUser(profile);
+
+        set({
+          user,
+          isAuthenticated: true,
+          isLoading: false,
+        });
       },
+
 
       logout: async () => {
         set({ isLoading: true });
@@ -54,6 +56,26 @@ export const useAuthStore = create<AuthState>()(
         } catch (e) {
           logger.error('Logout failed in store', e);
           set({ isLoading: false });
+        }
+      },
+
+      refreshUserProfile: async () => {
+        const user = get().user;
+        if (!user?.phoneNumber) {
+          logger.warn('Cannot refresh profile: no user logged in');
+          return;
+        }
+
+        try {
+          const profile = await userService.getProfileByPhone(user.phoneNumber);
+          // logger.info('Refreshed profile from backend:', profile);
+
+          const completeUser = userService.mapProfileToUser(profile, user);
+          // logger.info('Mapped complete user:', completeUser);
+
+          set({ user: completeUser });
+        } catch (error) {
+          logger.error('Failed to refresh user profile', error);
         }
       },
     }),

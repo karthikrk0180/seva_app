@@ -5,21 +5,28 @@
 
 export interface Guru {
   id: string;
-  name: {
-    en: string; // English Name
-    kn: string; // Kannada Name
-  };
-  period: string; // e.g., "1200-1280 AD"
-  brindavanaLocation: string;
-  description: {
-    en: string;
-    kn: string;
-  };
-  orderInLineage: number; // 1 for First Guru, etc.
+  nameEn: string; // English Name
+  nameKn: string; // Kannada Name
+  period: string; // e.g., "1595-1671"
+  location: string; // Brindavana location
+  descEn: string; // English description
+  descKn: string; // Kannada description
+  orderNum: number; // Order in lineage
   imageUrl?: string;
-  isAradhanaApproaching: boolean;
-  aradhanaDate?: string; // ISO Date for current year Aradhana
 }
+
+export interface GuruCreateRequest {
+  nameEn: string;
+  nameKn: string;
+  period: string;
+  location: string;
+  descEn: string;
+  descKn: string;
+  orderNum: number;
+  imageUrl?: string;
+}
+
+export interface GuruUpdateRequest extends Partial<GuruCreateRequest> {}
 
 export interface GuruListResponse {
   gurus: Guru[];

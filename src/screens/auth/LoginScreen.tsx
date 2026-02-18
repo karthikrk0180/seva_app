@@ -75,7 +75,7 @@ export const LoginScreen = () => {
                       maxLength={10}
                       value={value}
                       onChangeText={onChange}
-                      error={errors.phoneNumber?.message}
+                      // error={errors.phoneNumber?.message}
                       style={styles.phoneInput}
                     />
                   </View>

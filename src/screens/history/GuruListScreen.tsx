@@ -1,34 +1,78 @@
-import React from 'react';
-import { View, Text, FlatList, StyleSheet, Image } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, Text, FlatList, StyleSheet, Image, ActivityIndicator } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
-
 import { COLORS, SPACING, TYPOGRAPHY } from 'src/theme';
 import { Card } from 'src/components/common/Card';
-import { GURU_DATA } from './history.data';
 import { Guru } from 'src/models/guru.model';
 import { ROUTES } from 'src/config';
+import { guruService } from 'src/services/guru.service';
+import { Button } from 'src/components/common/Button';
 
 export const GuruListScreen = () => {
   const navigation = useNavigation<any>();
+  const [gurus, setGurus] = useState<Guru[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  const renderItem = ({ item }: { item: Guru }) => (
-    <Card 
-      style={styles.card} 
-      onPress={() => navigation.navigate(ROUTES.HISTORY.GURU_DETAIL, { id: item.id })}
-    >
-      <View style={styles.avatar}>
-         <Text style={{ fontSize: 24 }}>🧘</Text>
+
+  useEffect(() => {
+    const loadGurus = async () => {
+      try {
+        const data = await guruService.getGurus();
+        // Sort by orderNum if available
+        const sortedData = data.sort((a, b) => a.orderNum - b.orderNum);
+        setGurus(sortedData);
+      } catch (err) {
+        console.error('Failed to load gurus', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadGurus();
+  }, []);
+
+  const renderItem = ({ item }: { item: Guru }) => {
+    return (
+      <Card
+        style={styles.card}
+        onPress={() =>
+          navigation.navigate(ROUTES.HISTORY.GURU_DETAIL, { id: item.id })
+        }
+      >
+        <View style={styles.cardInner}>
+          {/* Show image ONLY if available */}
+          {item.imageUrl && (
+            <View style={styles.imageSection}>
+              <Image source={{ uri: item.imageUrl }} style={styles.guruImage} />
+            </View>
+          )}
+
+
+          <View style={styles.info}>
+            <Text style={TYPOGRAPHY.h3}>{item.nameEn}</Text>
+            <Text style={TYPOGRAPHY.caption}>{item.period}</Text>
+            <Text style={[TYPOGRAPHY.caption, { color: COLORS.primary }]}>
+              {item.orderNum}{getOrdinal(item.orderNum)} Peetadhipathi
+            </Text>
+
+            {/* {item.descEn ? (
+              <Text style={TYPOGRAPHY.body}>{item.descEn}</Text>
+            ) : null} */}
+          </View>
+        </View>
+      </Card>
+    );
+  };
+
+
+  if (loading) {
+    return (
+      <View style={styles.loader}>
+        <ActivityIndicator size="large" color={COLORS.primary} />
       </View>
-      <View style={styles.info}>
-        <Text style={TYPOGRAPHY.h3}>{item.name.en}</Text>
-        <Text style={TYPOGRAPHY.caption}>{item.period}</Text>
-        <Text style={[TYPOGRAPHY.caption, { color: COLORS.primary }]}>
-            {item.orderInLineage}{ getOrdinal(item.orderInLineage) } Peetadhipathi
-        </Text>
-      </View>
-    </Card>
-  );
+    );
+  }
 
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
@@ -36,9 +80,9 @@ export const GuruListScreen = () => {
         <Text style={TYPOGRAPHY.h2}>Guru Parampara</Text>
         <Text style={TYPOGRAPHY.body}>Lineage of Sode Matha</Text>
       </View>
-      
+
       <FlatList
-        data={GURU_DATA}
+        data={gurus}
         keyExtractor={(item) => item.id}
         renderItem={renderItem}
         contentContainerStyle={styles.list}
@@ -55,21 +99,26 @@ const getOrdinal = (n: number) => {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: COLORS.background },
+  loader: { flex: 1, justifyContent: 'center', alignItems: 'center' },
   header: { padding: SPACING.l, backgroundColor: COLORS.surface },
   list: { padding: SPACING.l },
-  card: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: SPACING.m,
+  card: { marginBottom: SPACING.m },
+  cardInner: { flexDirection: 'row', alignItems: 'center' },
+  imageSection: {
+    width: 80,
+    height: 80,
+    borderRadius: 8,
+    marginRight: SPACING.m,
+    overflow: 'hidden',
+    backgroundColor: COLORS.surface,
   },
-  avatar: {
-    width: 60,
-    height: 60,
-    borderRadius: 30,
-    backgroundColor: COLORS.background,
+  guruImage: { width: '100%', height: '100%', resizeMode: 'cover' },
+  placeholderImage: {
+    width: '100%',
+    height: '100%',
     justifyContent: 'center',
     alignItems: 'center',
-    marginRight: SPACING.m,
+    backgroundColor: COLORS.surface
   },
   info: { flex: 1 },
 });

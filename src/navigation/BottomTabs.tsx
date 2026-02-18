@@ -12,7 +12,18 @@ import { ProfileScreen } from 'src/screens/profile/ProfileScreen';
 import { MoreScreen } from 'src/screens/more/MoreScreen';
 import { RoomBookingScreen } from 'src/screens/booking/RoomBookingScreen';
 import { EventListScreen } from 'src/screens/events/EventListScreen';
+import { EventDetailScreen } from 'src/screens/events/EventDetailScreen';
+import { Event } from 'src/models/event.model';
+import { AdminDashboardScreen } from 'src/screens/admin/AdminDashboardScreen';
+import { SevaManagementScreen } from 'src/screens/admin/SevaManagementScreen';
+import { SevaFormScreen } from 'src/screens/admin/SevaFormScreen';
+import { GuruManagementScreen } from 'src/screens/admin/GuruManagementScreen';
+import { GuruFormScreen } from 'src/screens/admin/GuruFormScreen';
 import { ROUTES } from 'src/config';
+import { useAuthStore } from 'src/store/auth.store';
+import { useCartStore } from 'src/store/cart.store';
+import { AdminProvider } from 'src/context/AdminContext';
+import { CartScreen } from 'src/screens/cart/CartScreen';
 
 // -- History Stack --
 export type HistoryStackParamList = {
@@ -45,14 +56,57 @@ export type HomeStackParamList = {
   [ROUTES.TABS.HOME]: undefined;
   [ROUTES.SERVICES.ROOM_BOOKING]: undefined;
   [ROUTES.SERVICES.EVENTS]: undefined;
+  [ROUTES.SERVICES.EVENT_DETAIL]: { event: Event };
 };
 const HomeStackNav = createNativeStackNavigator<HomeStackParamList>();
 const HomeStack = () => (
-    <HomeStackNav.Navigator>
-        <HomeStackNav.Screen name={ROUTES.TABS.HOME} component={HomeScreen} options={{ headerShown: false }} />
-        <HomeStackNav.Screen name={ROUTES.SERVICES.ROOM_BOOKING} component={RoomBookingScreen} options={{ title: 'Guest House' }} />
-        <HomeStackNav.Screen name={ROUTES.SERVICES.EVENTS} component={EventListScreen} options={{ title: 'Events Calendar' }} />
-    </HomeStackNav.Navigator>
+  <HomeStackNav.Navigator>
+    <HomeStackNav.Screen name={ROUTES.TABS.HOME} component={HomeScreen} options={{ headerShown: false }} />
+    <HomeStackNav.Screen name={ROUTES.SERVICES.ROOM_BOOKING} component={RoomBookingScreen} options={{ title: 'Guest House' }} />
+    <HomeStackNav.Screen name={ROUTES.SERVICES.EVENTS} component={EventListScreen} options={{ title: 'Events Calendar' }} />
+    <HomeStackNav.Screen name={ROUTES.SERVICES.EVENT_DETAIL} component={EventDetailScreen} options={{ title: 'Event Details' }} />
+  </HomeStackNav.Navigator>
+);
+
+// -- Admin Stack --
+export type AdminStackParamList = {
+  [ROUTES.SERVICES.ADMIN]: undefined;
+  [ROUTES.SERVICES.SEVA_MANAGEMENT]: undefined;
+  SevaForm: { sevaId?: string };
+  [ROUTES.SERVICES.GURU_MANAGEMENT]: undefined;
+  [ROUTES.SERVICES.GURU_FORM]: { guruId?: string };
+};
+const AdminStackNav = createNativeStackNavigator<AdminStackParamList>();
+const AdminStack = () => (
+  <AdminProvider>
+    <AdminStackNav.Navigator>
+      <AdminStackNav.Screen
+        name={ROUTES.SERVICES.ADMIN}
+        component={AdminDashboardScreen}
+        options={{ title: 'Admin Panel' }}
+      />
+      <AdminStackNav.Screen
+        name={ROUTES.SERVICES.SEVA_MANAGEMENT}
+        component={SevaManagementScreen}
+        options={{ title: 'Manage Sevas' }}
+      />
+      <AdminStackNav.Screen
+        name="SevaForm"
+        component={SevaFormScreen}
+        options={({ route }) => ({ title: route.params?.sevaId ? 'Edit Seva' : 'Add Seva' })}
+      />
+      <AdminStackNav.Screen
+        name={ROUTES.SERVICES.GURU_MANAGEMENT}
+        component={GuruManagementScreen}
+        options={{ title: 'Manage Gurus' }}
+      />
+      <AdminStackNav.Screen
+        name={ROUTES.SERVICES.GURU_FORM}
+        component={GuruFormScreen}
+        options={({ route }) => ({ title: (route.params as any)?.guruId ? 'Edit Guru' : 'Add Guru' })}
+      />
+    </AdminStackNav.Navigator>
+  </AdminProvider>
 );
 
 // -- Bottom Tabs --
@@ -60,11 +114,19 @@ export type BottomTabParamList = {
   HomeStack: undefined; // Renamed to container
   [ROUTES.TABS.HISTORY]: undefined;
   [ROUTES.TABS.SEVA]: undefined;
+  [ROUTES.TABS.CART]: undefined;
   [ROUTES.TABS.PROFILE]: undefined;
   [ROUTES.TABS.MORE]: undefined;
+  AdminStack: undefined;
 };
 
 const Tab = createBottomTabNavigator<BottomTabParamList>();
+
+const tabIcon =
+  (name: string) =>
+    ({ color, size }: { color: string; size: number }) =>
+      <MaterialIcons name={name as any} size={size} color={color} />;
+
 
 const tabScreenOptions = (iconName: string) => ({
   tabBarIcon: ({ color, size }: { focused: boolean; color: string; size: number }) => (
@@ -73,6 +135,10 @@ const tabScreenOptions = (iconName: string) => ({
 });
 
 export const BottomTabs = () => {
+  const { user } = useAuthStore();
+  const { items } = useCartStore();
+  const cartItemCount = items.length;
+
   return (
     <Tab.Navigator
       screenOptions={{
@@ -83,11 +149,35 @@ export const BottomTabs = () => {
         tabBarLabelStyle: { fontSize: 12 },
       }}
     >
-      <Tab.Screen name="HomeStack" component={HomeStack} options={{ tabBarLabel: 'Home', ...tabScreenOptions('home') }} />
+      <Tab.Screen
+        name="HomeStack"
+        component={HomeStack}
+        options={{
+          tabBarLabel: 'Home',
+          tabBarIcon: tabIcon('home'),
+        }}
+      />
       <Tab.Screen name={ROUTES.TABS.HISTORY} component={HistoryStack} options={{ tabBarLabel: 'History', ...tabScreenOptions('auto-stories') }} />
       <Tab.Screen name={ROUTES.TABS.SEVA} component={SevaStack} options={{ tabBarLabel: 'Seva', ...tabScreenOptions('volunteer-activism') }} />
+      <Tab.Screen
+        name={ROUTES.TABS.CART}
+        component={CartScreen}
+        options={{
+          tabBarLabel: 'Cart',
+          ...tabScreenOptions('shopping-cart'),
+          tabBarBadge: cartItemCount > 0 ? cartItemCount : undefined
+        }}
+      />
       <Tab.Screen name={ROUTES.TABS.PROFILE} component={ProfileScreen} options={{ tabBarLabel: 'Profile', ...tabScreenOptions('person') }} />
       <Tab.Screen name={ROUTES.TABS.MORE} component={MoreScreen} options={{ tabBarLabel: 'More', ...tabScreenOptions('more-horiz') }} />
+
+      {user?.role === 'admin' && (
+        <Tab.Screen
+          name="AdminStack"
+          component={AdminStack}
+          options={{ tabBarLabel: 'Admin', ...tabScreenOptions('admin-panel-settings') }}
+        />
+      )}
     </Tab.Navigator>
   );
 };

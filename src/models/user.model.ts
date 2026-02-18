@@ -6,10 +6,15 @@
 export type UserRole = 'devotee' | 'admin' | 'staff';
 
 export interface User {
+  id: any;
   uid: string;
   phoneNumber: string;
   email?: string;
   displayName?: string;
+  firstName?: string;
+  lastName?: string;
+  dob?: string; // Date of birth
+  gender?: string;
   photoURL?: string;
   role: UserRole;
   isEmailVerified: boolean;
@@ -30,4 +35,4 @@ export interface User {
 }
 
 // Ensure strict typing for updates
-export type UserProfileUpdate = Partial<Pick<User, 'displayName' | 'email' | 'photoURL' | 'preferences' | 'address' | 'city' | 'state' | 'pincode' | 'nakshatra' | 'rashi' | 'gothra'>>;
+export type UserProfileUpdate = Partial<Pick<User, 'displayName' | 'firstName' | 'lastName' | 'dob' | 'gender' | 'email' | 'photoURL' | 'preferences' | 'address' | 'city' | 'state' | 'pincode' | 'nakshatra' | 'rashi' | 'gothra'>>;
